@@ -42,20 +42,6 @@
 - **XGBoost / LightGBM** for demand forecasting
 - **pvlib** for solar generation modelling
 
-### Optimisation
-- **Google OR-Tools** for mathematical optimisation
-- Linear and mixed-integer programming constraints
-
-### Orchestration
-- **LangGraph-style state graph** or custom finite-state workflow
-- Explicit agent handoffs and state transitions
-
-### Deployment
-- **Vercel** for frontend
-- **Containerised** backend deployment
-- **Managed PostgreSQL** database
-- Environment-based secret management
-
 ---
 
 ## Challenge and Approach 
