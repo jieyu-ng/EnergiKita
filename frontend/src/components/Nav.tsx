@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Zap } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
 import { LogOut } from "lucide-react";
@@ -32,17 +31,17 @@ export function Nav() {
             
             {accountType === "business" && (
               <>
-                <Link href="/upload" className={getLinkClass("/upload")}>SME Platform</Link>
-                <Link href="/passport" className={getLinkClass("/passport")}>Passports</Link>
-                <Link href="/community" className={getLinkClass("/community")}>Community Hub</Link>
+                <Link href="/upload" className={getLinkClass("/upload")}>Bill Upload</Link>
+                <Link href="/passport" className={getLinkClass("/passport")}>Energy Passport</Link>
+                <Link href="/community" className={getLinkClass("/community")}>Optimisation Hub</Link>
               </>
             )}
 
             {accountType === "individual" && (
               <>
-                <Link href="/upload" className={getLinkClass("/upload")}>Home Platform</Link>
-                <Link href="/passport" className={getLinkClass("/passport")}>Passports</Link>
-                <Link href="/community" className={getLinkClass("/community")}>Peer-to-Peer Hub</Link>
+                <Link href="/upload" className={getLinkClass("/upload")}>Bill Upload</Link>
+                <Link href="/passport" className={getLinkClass("/passport")}>Energy Passport</Link>
+                <Link href="/community" className={getLinkClass("/community")}>Savings Hub</Link>
               </>
             )}
           </div>

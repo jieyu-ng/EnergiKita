@@ -1,0 +1,12 @@
+{
+  "billing_month": "2026-05",
+  "consumption_kwh": 474,
+  "total_amount_rm": 186.74,
+  "billing_days": 31,
+  "confidence": 1,
+  "source": "sample_json_fixture",
+  "extraction_notes": [
+    "Sample fixture for household onboarding and tariff-threshold validation.",
+    "Designed to sit above the 300 kWh domestic threshold for recommendation testing."
+  ]
+}

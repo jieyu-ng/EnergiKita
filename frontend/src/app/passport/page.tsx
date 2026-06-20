@@ -6,6 +6,7 @@ import { useUser } from "@/contexts/UserContext";
 
 export default function PassportPage() {
   const { accountType } = useUser();
+  const isBusiness = accountType === "business";
   return (
     <div className="max-w-[var(--page-width)] mx-auto px-6 pt-12 pb-24">
       <div className="flex flex-col md:flex-row gap-8">
@@ -14,28 +15,28 @@ export default function PassportPage() {
         <div className="w-full md:w-64 flex-shrink-0 space-y-6">
           <div>
             <h1 className="text-[var(--text-2xl)] font-bold text-[var(--color-ink)] leading-tight">
-              Aisyah Laundry
+              {isBusiness ? "Aisyah Laundry" : "Your Household"}
             </h1>
             <p className="text-[var(--text-sm)] text-[var(--color-ink-2)] mt-1">
-              Energy Passport
+              {isBusiness ? "Business Energy Passport" : "Home Energy Passport"}
             </p>
           </div>
 
           <div className="pt-4 border-t border-[var(--color-border)]">
             <h3 className="text-[var(--text-sm)] font-bold text-[var(--color-ink)] mb-3">
-              Solar Tech Agent Estimates
+              Energy Snapshot
             </h3>
             <ul className="text-[var(--text-sm)] text-[var(--color-ink-2)] space-y-3">
               <li className="flex justify-between border-b border-[var(--color-border)] pb-2">
-                <span>Daily Generation:</span>
+                <span>{isBusiness ? "Daily generation:" : "Daily usage offset:"}</span>
                 <span className="font-medium text-[var(--color-ink)]">30.4 kWh</span>
               </li>
               <li className="flex justify-between border-b border-[var(--color-border)] pb-2">
-                <span>Self-Consumed:</span>
+                <span>{isBusiness ? "Self-consumed:" : "Self-used energy:"}</span>
                 <span className="font-medium text-[var(--color-ink)]">22.1 kWh</span>
               </li>
               <li className="flex justify-between border-b border-[var(--color-border)] pb-2">
-                <span>Surplus Energy:</span>
+                <span>{isBusiness ? "Surplus energy:" : "Flexible savings potential:"}</span>
                 <span className="font-medium text-[var(--color-accent)]">8.3 kWh</span>
               </li>
             </ul>
@@ -47,15 +48,15 @@ export default function PassportPage() {
           
           <div className="flex border-b border-[var(--color-border)] mb-6">
             <button className="px-4 py-2 text-[var(--text-sm)] font-medium text-[var(--color-accent)] border-b-2 border-[var(--color-accent)] -mb-px">
-              Solar Credit Trader Strategies
+              Recommended Next Moves
             </button>
           </div>
 
           <div className="space-y-8">
             <section>
-              <h2 className="text-[var(--text-base)] font-bold text-[var(--color-ink)] mb-4">Available Strategies for Surplus Solar</h2>
+              <h2 className="text-[var(--text-base)] font-bold text-[var(--color-ink)] mb-4">Available Strategies</h2>
               <p className="text-[var(--text-sm)] text-[var(--color-ink-2)] mb-6">
-                The Solar Credit Trader has evaluated 4 strategies for your remaining 8.3 kWh surplus generation.
+                EnergiKita has ranked the best ways to use or redirect your remaining 8.3 kWh of value.
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -68,7 +69,9 @@ export default function PassportPage() {
                       <h3 className="font-bold text-[var(--text-sm)] text-[var(--color-ink)]">1. Shift Equipment</h3>
                     </div>
                     <p className="text-[var(--text-sm)] text-[var(--color-ink-2)]">
-                      Move flexible washing cycles into peak solar hours (11am - 2pm).
+                      {isBusiness
+                        ? "Move flexible washing cycles into peak solar hours (11am - 2pm)."
+                        : "Shift the most flexible loads into peak solar hours so more of your usage is covered directly."}
                     </p>
                   </div>
                   <div className="mt-4 pt-3 border-t border-[var(--color-border)]">
@@ -84,7 +87,7 @@ export default function PassportPage() {
                       <h3 className="font-bold text-[var(--text-sm)] text-[var(--color-ink)]">2. Export Surplus</h3>
                     </div>
                     <p className="text-[var(--text-sm)] text-[var(--color-ink-2)]">
-                      Export the remaining inflexible surplus back to the TNB grid.
+                      Send the remaining inflexible surplus back to the TNB grid when direct usage is not practical.
                     </p>
                   </div>
                   <div className="mt-4 pt-3 border-t border-[var(--color-border)]">
@@ -93,15 +96,15 @@ export default function PassportPage() {
                   </div>
                 </div>
 
-                {accountType === "business" && (
+                {isBusiness && (
                   <div className="border border-[var(--color-border)] rounded-[var(--radius-md)] p-5 bg-[var(--color-paper-2)] shadow-sm flex flex-col justify-between">
                     <div>
                       <div className="flex items-center mb-2">
                         <Box className="w-5 h-5 text-[var(--color-ink-2)] mr-2" />
-                        <h3 className="font-bold text-[var(--text-sm)] text-[var(--color-ink)]">3. Virtual Allocation (NOVA)</h3>
+                        <h3 className="font-bold text-[var(--text-sm)] text-[var(--color-ink)]">3. Branch Allocation (NOVA)</h3>
                       </div>
                       <p className="text-[var(--text-sm)] text-[var(--color-ink-2)]">
-                        Pass export credits to designated business branches via grid offset.
+                        Route export credits to designated business branches through virtual allocation.
                       </p>
                     </div>
                     <div className="mt-4 pt-3 border-t border-[var(--color-border)]">
@@ -115,11 +118,11 @@ export default function PassportPage() {
             
             <div className="pt-6 border-t border-[var(--color-border)] flex items-center justify-between">
               <div className="text-[var(--text-sm)] text-[var(--color-ink-2)]">
-                Pass these strategies to the Optimisation Engine to build the final schedule.
+                Use these recommendations to build a practical schedule inside the optimisation workspace.
               </div>
               <Link href="/community">
                 <button className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-6 py-2.5 rounded-[var(--radius-md)] text-[var(--text-sm)] font-medium shadow-sm transition-colors flex items-center">
-                  Run Optimisation Engine <ArrowRight className="w-4 h-4 ml-2" />
+                  Open Optimisation Hub <ArrowRight className="w-4 h-4 ml-2" />
                 </button>
               </Link>
             </div>

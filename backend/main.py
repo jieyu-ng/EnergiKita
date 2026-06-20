@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="EnergiKita FlexOS API")
+app = FastAPI(title="EnergiKita API")
 
 # Configure CORS
 app.add_middleware(
@@ -20,7 +20,7 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to EnergiKita FlexOS API"}
+    return {"message": "Welcome to the EnergiKita API"}
 
 @app.get("/health")
 def health_check():

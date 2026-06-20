@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200">
+  <rect width="900" height="1200" fill="#f7f4ee"/>
+  <rect x="60" y="50" width="780" height="1100" rx="24" fill="#ffffff" stroke="#d4d4d8" stroke-width="2"/>
+  <text x="100" y="115" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#0f172a">TENAGA NASIONAL BERHAD</text>
+  <text x="100" y="155" font-family="Arial, sans-serif" font-size="18" fill="#475569">Sample Household Bill Fixture</text>
+
+  <text x="100" y="235" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#0f172a">Billing Month</text>
+  <text x="520" y="235" font-family="Arial, sans-serif" font-size="17" fill="#0f172a">May 2026</text>
+
+  <text x="100" y="285" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#0f172a">Billing Days</text>
+  <text x="520" y="285" font-family="Arial, sans-serif" font-size="17" fill="#0f172a">31</text>
+
+  <text x="100" y="335" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#0f172a">Consumption (kWh)</text>
+  <text x="520" y="335" font-family="Arial, sans-serif" font-size="17" fill="#0f172a">474 kWh</text>
+
+  <text x="100" y="385" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#0f172a">Total Amount</text>
+  <text x="520" y="385" font-family="Arial, sans-serif" font-size="17" fill="#0f172a">RM 186.74</text>
+
+  <rect x="100" y="455" width="640" height="120" rx="18" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text x="130" y="505" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#312e81">Tariff Test Hint</text>
+  <text x="130" y="540" font-family="Arial, sans-serif" font-size="16" fill="#4338ca">This fixture is intentionally above 300 kWh so the app can</text>
+  <text x="130" y="567" font-family="Arial, sans-serif" font-size="16" fill="#4338ca">show the expensive tier logic and threshold reminder cards.</text>
+
+  <rect x="100" y="640" width="300" height="150" rx="18" fill="#ecfdf5" stroke="#86efac"/>
+  <text x="130" y="690" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#14532d">Domestic Tier Reference</text>
+  <text x="130" y="728" font-family="Arial, sans-serif" font-size="15" fill="#166534">0-200 kWh : RM 0.218</text>
+  <text x="130" y="756" font-family="Arial, sans-serif" font-size="15" fill="#166534">201-300 kWh : RM 0.334</text>
+
+  <rect x="430" y="640" width="310" height="150" rx="18" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="460" y="690" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#9a3412">High-Cost Tier Trigger</text>
+  <text x="460" y="728" font-family="Arial, sans-serif" font-size="15" fill="#c2410c">301-600 kWh : RM 0.516</text>
+  <text x="460" y="756" font-family="Arial, sans-serif" font-size="15" fill="#c2410c">Current bill is 174 kWh into this band.</text>
+
+  <text x="100" y="900" font-family="Arial, sans-serif" font-size="15" fill="#64748b">Fixture purpose: extraction testing, onboarding autofill, and demo verification.</text>
+  <text x="100" y="930" font-family="Arial, sans-serif" font-size="15" fill="#64748b">Not an official TNB document.</text>
+</svg>
