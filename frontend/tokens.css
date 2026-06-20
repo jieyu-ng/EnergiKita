@@ -1,50 +1,45 @@
-/* Hallmark · macrostructure: Bento Grid · tone: luxury · anchor hue: cyan
- * theme: custom (vibe: "airy bright glassmorphism") · axes: light / display-sans / cool
+/* Hallmark · macrostructure: SaaS Dashboard · tone: clean, technical · anchor hue: indigo
+ * theme: custom (vibe: "Stripe-like utility") · axes: light / inter-sans / neutral
  */
 
 :root {
-  /* Color Palette - Aero Theme */
-  --color-paper: oklch(0.99 0 0);
-  --color-paper-2: oklch(0.97 0 0);
-  --color-paper-3: oklch(0.95 0 0);
+  /* Color Palette - SaaS Theme */
+  --color-paper: #ffffff;
+  --color-paper-2: #f9fafb; /* gray-50 */
+  --color-paper-3: #f3f4f6; /* gray-100 */
   
-  --color-ink: oklch(0.2 0 0);
-  --color-ink-2: oklch(0.45 0 0);
-  --color-ink-3: oklch(0.65 0 0);
+  --color-ink: #111827; /* gray-900 */
+  --color-ink-2: #4b5563; /* gray-600 */
+  --color-ink-3: #9ca3af; /* gray-400 */
   
-  --color-accent: oklch(0.65 0.15 230); /* Cyan / Light Blue */
-  --color-accent-hover: oklch(0.55 0.15 230);
-  --color-accent-ink: oklch(0.99 0 0);
+  --color-accent: #4f46e5; /* indigo-600 */
+  --color-accent-hover: #4338ca; /* indigo-700 */
+  --color-accent-ink: #ffffff;
   
-  --color-border: oklch(0.9 0 0 / 0.5);
-  --color-border-hover: oklch(0.8 0 0 / 0.8);
-  --color-focus: oklch(0.65 0.15 230 / 0.5);
+  --color-border: #e5e7eb; /* gray-200 */
+  --color-border-hover: #d1d5db; /* gray-300 */
+  --color-focus: #4f46e5;
   
-  --color-error: oklch(0.6 0.2 25);
-  --color-success: oklch(0.65 0.15 150);
-
-  /* Glassmorphism Tokens */
-  --glass-bg: oklch(0.99 0 0 / 0.6);
-  --glass-bg-hover: oklch(0.99 0 0 / 0.8);
-  --glass-border: oklch(1 0 0 / 0.8);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
-  --glass-shadow-hover: 0 12px 48px 0 rgba(0, 0, 0, 0.08);
+  --color-error: #ef4444; /* red-500 */
+  --color-error-bg: #fef2f2; /* red-50 */
+  
+  --color-success: #10b981; /* emerald-500 */
+  --color-success-bg: #ecfdf5; /* emerald-50 */
 
   /* Typography */
-  --font-display: var(--font-outfit), "Helvetica Neue", sans-serif;
-  --font-body: var(--font-sans), "Helvetica Neue", sans-serif;
+  --font-display: var(--font-inter), "Inter", "Helvetica Neue", sans-serif;
+  --font-body: var(--font-inter), "Inter", "Helvetica Neue", sans-serif;
   --font-mono: var(--font-mono), monospace;
 
+  /* Smaller scale for data density */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
-  --text-base: 1rem;
+  --text-base: 0.9375rem; /* 15px is common in dense dashboards */
   --text-lg: 1.125rem;
   --text-xl: 1.25rem;
   --text-2xl: 1.5rem;
   --text-3xl: 1.875rem;
   --text-4xl: 2.25rem;
-  --text-display-s: 3.5rem;
-  --text-display: 5rem;
 
   /* Spacing Scale (4pt) */
   --space-1: 0.25rem;
@@ -55,27 +50,24 @@
   --space-8: 2rem;
   --space-12: 3rem;
   --space-16: 4rem;
-  --space-24: 6rem;
-  --space-32: 8rem;
 
   /* Layout */
-  --page-width: 80rem; /* 1280px */
-  --content-width: 64rem; /* 1024px for bento */
+  --page-width: 90rem; /* 1440px max width for dashboard */
+  --content-width: 64rem;
 
   /* Motion */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --dur-fast: 200ms;
-  --dur-base: 400ms;
-  --dur-slow: 700ms;
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 350ms;
 
-  /* Radius - Softer for Aero */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-2xl: 32px;
+  /* Radius - Very subtle for SaaS */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
   --radius-full: 9999px;
 }
 

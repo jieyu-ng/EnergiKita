@@ -124,11 +124,6 @@
   }
   body {
     background-color: var(--color-paper);
-    background-image: 
-      radial-gradient(at 0% 0%, oklch(0.95 0.05 230 / 0.5) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, oklch(0.95 0.05 180 / 0.5) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, oklch(0.95 0.05 260 / 0.5) 0px, transparent 50%);
-    background-attachment: fixed;
     color: var(--color-ink);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;

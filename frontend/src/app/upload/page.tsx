@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { UploadCloud, CheckCircle2, AlertCircle, Sparkles } from "lucide-react";
+import { UploadCloud, Check, AlertCircle } from "lucide-react";
 
 export default function UploadPage() {
   const router = useRouter();
@@ -15,89 +15,75 @@ export default function UploadPage() {
       setExtractedData([
         { name: "Billing Month", value: "May 2026", confidence: 0.98, status: "verified" },
         { name: "Consumption (kWh)", value: "1420", confidence: 0.98, status: "verified" },
-        { name: "Total Amount (RM)", value: "980", confidence: 0.65, status: "needs_confirmation" },
+        { name: "Total Amount (RM)", value: "980.00", confidence: 0.65, status: "needs_confirmation" },
       ]);
       setStep(3);
-    }, 2000);
+    }, 1500);
   };
 
   return (
-    <div className="flex flex-col items-center pt-16 px-6 relative">
-      {/* Background glow specific to this page */}
-      <div className="absolute top-20 left-1/2 -translate-x-1/2 w-96 h-96 bg-[var(--color-accent)]/10 rounded-full blur-[100px] pointer-events-none -z-10"></div>
+    <div className="flex flex-col items-center pt-16 px-6">
       
-      <div className="max-w-[var(--content-width)] w-full space-y-12">
+      <div className="max-w-[var(--content-width)] w-full max-w-2xl space-y-8">
         
-        <div className="text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-[var(--dur-base)]">
-          <p className="text-[var(--text-sm)] font-medium text-[var(--color-accent)] tracking-wider uppercase">Step 1</p>
-          <h1 className="text-[var(--text-4xl)] font-display text-[var(--color-ink)]">
+        <div className="space-y-2">
+          <h1 className="text-[var(--text-3xl)] font-bold text-[var(--color-ink)] tracking-tight">
             Upload Historical Bill
           </h1>
-          <p className="text-[var(--text-lg)] text-[var(--color-ink-2)] max-w-xl mx-auto">
-            Provide a recent electricity bill. KitaAI Document Agent will extract the consumption profile automatically.
+          <p className="text-[var(--text-base)] text-[var(--color-ink-2)]">
+            Provide a recent electricity bill. We will extract the consumption profile automatically.
           </p>
         </div>
 
         {step === 1 && (
-          <div className="animate-in fade-in slide-in-from-bottom-8 duration-[var(--dur-base)] delay-100">
-            <div 
-              onClick={handleUpload}
-              className="bg-[var(--glass-bg)] backdrop-blur-2xl border border-[var(--glass-border)] rounded-[var(--radius-2xl)] shadow-[var(--glass-shadow)] p-2 transition-all hover:shadow-[var(--glass-shadow-hover)] cursor-pointer group"
-            >
-              <div className="flex flex-col items-center justify-center border-2 border-dashed border-[var(--color-border)] rounded-[var(--radius-xl)] py-24 px-6 bg-[var(--color-paper)]/50 group-hover:bg-[var(--color-paper)] group-hover:border-[var(--color-accent)]/50 transition-all">
-                <div className="w-16 h-16 rounded-full bg-[var(--color-paper-2)] flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-[var(--color-accent)]/10 transition-all duration-[var(--dur-base)]">
-                  <UploadCloud className="w-8 h-8 text-[var(--color-ink-3)] group-hover:text-[var(--color-accent)] transition-colors" />
-                </div>
-                <p className="text-[var(--text-xl)] font-display text-[var(--color-ink)]">Select a PDF or Image</p>
-                <p className="text-[var(--text-base)] text-[var(--color-ink-3)] mt-2">or drag and drop here to simulate</p>
-              </div>
+          <div 
+            onClick={handleUpload}
+            className="border border-[var(--color-border)] rounded-[var(--radius-lg)] p-12 bg-white flex flex-col items-center justify-center cursor-pointer hover:border-[var(--color-accent)] transition-colors shadow-sm"
+          >
+            <div className="w-12 h-12 rounded-full bg-[var(--color-paper-3)] flex items-center justify-center mb-4">
+              <UploadCloud className="w-6 h-6 text-[var(--color-ink-2)]" />
             </div>
+            <p className="text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Click to upload or drag and drop</p>
+            <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] mt-1">PDF, PNG, JPG up to 10MB</p>
           </div>
         )}
 
         {step === 2 && (
-          <div className="bg-[var(--glass-bg)] backdrop-blur-2xl rounded-[var(--radius-2xl)] border border-[var(--glass-border)] shadow-[var(--glass-shadow)] p-24 flex flex-col items-center justify-center animate-in fade-in zoom-in-95 duration-[var(--dur-slow)] relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--color-accent)]/5 to-transparent animate-[shimmer_2s_infinite] -z-10"></div>
-            <div className="w-12 h-12 border-4 border-[var(--color-border)] border-t-[var(--color-accent)] rounded-full animate-spin mb-6 shadow-[0_0_15px_rgba(var(--color-accent),0.3)]"></div>
-            <p className="text-[var(--text-xl)] font-display text-[var(--color-ink)] flex items-center">
-              <Sparkles className="w-5 h-5 mr-3 text-[var(--color-accent)] animate-pulse" />
-              KitaAI is extracting data...
+          <div className="border border-[var(--color-border)] rounded-[var(--radius-lg)] p-16 bg-white flex flex-col items-center justify-center shadow-sm">
+            <div className="w-8 h-8 border-2 border-[var(--color-border)] border-t-[var(--color-accent)] rounded-full animate-spin mb-4"></div>
+            <p className="text-[var(--text-sm)] font-medium text-[var(--color-ink)]">
+              Extracting document data...
             </p>
           </div>
         )}
 
         {step === 3 && (
-          <div className="animate-in fade-in slide-in-from-bottom-8 duration-[var(--dur-base)] space-y-8">
-            <div className="bg-[var(--glass-bg)] backdrop-blur-2xl rounded-[var(--radius-2xl)] border border-[var(--glass-border)] shadow-[var(--glass-shadow)] overflow-hidden">
-              <div className="px-8 py-6 border-b border-[var(--color-border)] bg-[var(--color-paper)]/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h3 className="font-display text-[var(--text-xl)] text-[var(--color-ink)]">Extracted Values</h3>
-                  <p className="text-[var(--text-sm)] text-[var(--color-ink-2)] mt-1">Please verify the highlighted fields.</p>
-                </div>
-                <span className="inline-flex items-center text-[var(--text-xs)] font-medium px-3 py-1.5 bg-[var(--color-paper)] border border-[var(--color-border)] rounded-full text-[var(--color-ink-2)] shadow-sm">
-                  Confidence Score: 85%
-                </span>
+          <div className="space-y-6">
+            <div className="bg-white rounded-[var(--radius-lg)] border border-[var(--color-border)] shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-[var(--color-border)] bg-[var(--color-paper-2)] flex items-center justify-between">
+                <h3 className="font-semibold text-[var(--text-sm)] text-[var(--color-ink)]">Extracted Data</h3>
+                <span className="text-[var(--text-xs)] text-[var(--color-ink-2)]">Confidence: 85%</span>
               </div>
               
               <div className="divide-y divide-[var(--color-border)]">
                 {extractedData.map((field, idx) => (
-                  <div key={idx} className="p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-[var(--color-paper)]/40 transition-colors">
+                  <div key={idx} className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="flex-1">
-                      <label className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-widest">{field.name}</label>
+                      <label className="text-[var(--text-xs)] font-medium text-[var(--color-ink-2)] uppercase tracking-wider">{field.name}</label>
                       <input 
                         type="text" 
                         defaultValue={field.value} 
-                        className="w-full mt-2 bg-transparent text-[var(--text-2xl)] font-display text-[var(--color-ink)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/50 rounded-lg px-3 -ml-3 py-2 transition-all" 
+                        className="w-full mt-1 bg-transparent text-[var(--text-base)] font-medium text-[var(--color-ink)] border border-transparent focus:border-[var(--color-border)] focus:bg-[var(--color-paper-2)] rounded px-2 -ml-2 py-1 transition-all outline-none" 
                       />
                     </div>
                     <div>
                       {field.status === "verified" ? (
-                        <div className="flex items-center text-[var(--text-sm)] font-medium text-[var(--color-success)] px-4 py-2 rounded-full border border-[var(--color-success)]/20 bg-[var(--color-success)]/5">
-                          <CheckCircle2 className="w-5 h-5 mr-2" /> Verified (98%)
+                        <div className="flex items-center text-[var(--text-xs)] font-medium text-[var(--color-success)] px-2 py-1 bg-[var(--color-success-bg)] rounded-md">
+                          <Check className="w-3 h-3 mr-1" /> Verified
                         </div>
                       ) : (
-                        <div className="flex items-center text-[var(--text-sm)] font-medium text-[var(--color-error)] px-4 py-2 rounded-full border border-[var(--color-error)]/30 bg-[var(--color-error)]/10 shadow-[0_0_10px_rgba(255,0,0,0.05)]">
-                          <AlertCircle className="w-5 h-5 mr-2" /> Please confirm
+                        <div className="flex items-center text-[var(--text-xs)] font-medium text-[var(--color-error)] px-2 py-1 bg-[var(--color-error-bg)] rounded-md">
+                          <AlertCircle className="w-3 h-3 mr-1" /> Needs review
                         </div>
                       )}
                     </div>
@@ -106,12 +92,12 @@ export default function UploadPage() {
               </div>
             </div>
 
-            <div className="flex justify-end pt-4">
+            <div className="flex justify-end pt-2">
               <button 
                 onClick={() => router.push("/onboard")}
-                className="bg-[var(--color-ink)] text-[var(--color-paper)] px-8 py-4 rounded-full font-medium shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:bg-[var(--color-accent)] transition-all duration-[var(--dur-base)]"
+                className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-6 py-2.5 rounded-[var(--radius-md)] text-[var(--text-sm)] font-medium shadow-sm transition-colors"
               >
-                Confirm & Continue
+                Confirm and continue
               </button>
             </div>
           </div>
