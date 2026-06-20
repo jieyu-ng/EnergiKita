@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
+import { UserProvider } from "@/contexts/UserContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -35,11 +36,13 @@ export default function RootLayout({
       className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-body">
-        <Nav />
-        <main className="flex-1 pt-24 pb-16">
-          {children}
-        </main>
-        <Footer />
+        <UserProvider>
+          <Nav />
+          <main className="flex-1 pt-24 pb-16">
+            {children}
+          </main>
+          <Footer />
+        </UserProvider>
       </body>
     </html>
   );

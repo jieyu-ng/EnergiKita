@@ -1,273 +1,235 @@
 "use client";
 
 import { useState } from "react";
-import { PlayCircle, AlertTriangle, Download, Check, X } from "lucide-react";
+import { PlayCircle, Leaf, Building, ArrowRight, Zap, CheckCircle2, TrendingDown } from "lucide-react";
 
 export default function CommunityPage() {
-  const [optStatus, setOptStatus] = useState<"idle" | "running" | "rejected" | "approved">("idle");
+  const [optStatus, setOptStatus] = useState<"idle" | "running" | "approved">("idle");
 
-  const runOptimisation = () => {
-    setOptStatus("running");
-    setTimeout(() => {
-      setOptStatus("rejected");
-    }, 1500);
-  };
-
-  const reoptimise = () => {
+  const runAuction = () => {
     setOptStatus("running");
     setTimeout(() => {
       setOptStatus("approved");
-    }, 1500);
+    }, 2000);
   };
 
   return (
     <div className="max-w-[var(--page-width)] mx-auto px-6 pt-12 pb-24">
       <div className="flex flex-col lg:flex-row gap-12">
         
-        {/* Left Sidebar - Profile Details */}
+        {/* Left Sidebar */}
         <div className="w-full lg:w-64 flex-shrink-0 space-y-6">
           <div>
             <h1 className="text-[var(--text-2xl)] font-bold text-[var(--color-ink)] leading-tight">
-              Community Hub
+              Operator Hub
             </h1>
             <p className="text-[var(--text-sm)] text-[var(--color-ink-2)] mt-1">
-              Solar Alpha Region
+              Optimisation & NOVA Allocation
             </p>
           </div>
           
-          <div className="flex gap-4">
-            <div>
-              <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider mb-1">Status</p>
-              <span className="inline-flex items-center text-[var(--text-xs)] font-medium text-[var(--color-success)] bg-[var(--color-success-bg)] px-2 py-0.5 rounded">
-                Active
-              </span>
-            </div>
-            <div>
-              <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider mb-1">Nodes</p>
-              <span className="inline-flex items-center text-[var(--text-xs)] font-medium text-[var(--color-ink-2)] bg-[var(--color-paper-3)] px-2 py-0.5 rounded">
-                4 SMEs
-              </span>
-            </div>
-          </div>
-
           <div className="pt-4 border-t border-[var(--color-border)]">
             <h3 className="text-[var(--text-sm)] font-bold text-[var(--color-ink)] mb-3">
-              Environment
-            </h3>
-            <ul className="text-[var(--text-sm)] text-[var(--color-ink-2)] space-y-2">
-              <li><strong>Solar Capacity:</strong> 120 kWp</li>
-              <li><strong>Flex Pool:</strong> 90 kWh</li>
-              <li><strong>Baseline Import:</strong> 52 kWh</li>
-            </ul>
-          </div>
-          
-          <div className="pt-4 border-t border-[var(--color-border)]">
-            <h3 className="text-[var(--text-sm)] font-bold text-[var(--color-ink)] mb-3">
-              Actions
+              Solar Credit Auction
             </h3>
             <button 
-              onClick={runOptimisation}
-              disabled={optStatus === "running"}
+              onClick={runAuction}
+              disabled={optStatus === "running" || optStatus === "approved"}
               className="w-full bg-white border border-[var(--color-border)] hover:bg-[var(--color-paper-2)] text-[var(--color-ink)] px-4 py-2 rounded-[var(--radius-md)] text-[var(--text-sm)] font-medium transition-colors flex items-center justify-center disabled:opacity-50"
             >
-              <PlayCircle className="w-4 h-4 mr-2" /> Start Optimisation
+              <PlayCircle className="w-4 h-4 mr-2 text-[var(--color-accent)]" /> 
+              {optStatus === "running" ? "Running Solver..." : optStatus === "approved" ? "Solver Completed" : "Run Solver"}
             </button>
-            {optStatus === "approved" && (
-              <button 
-                onClick={() => window.print()}
-                className="w-full mt-2 bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-4 py-2 rounded-[var(--radius-md)] text-[var(--text-sm)] font-medium transition-colors flex items-center justify-center shadow-sm"
-              >
-                <Download className="w-4 h-4 mr-2" /> Export Report
-              </button>
-            )}
+            <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] mt-3 leading-relaxed">
+              Objective: Maximise total savings = (avoided grid import + export credit + branch offset) - inconvenience penalty.
+            </p>
           </div>
+
+          {optStatus === "approved" && (
+            <div className="pt-4 border-t border-[var(--color-border)] space-y-4">
+              <h3 className="text-[var(--text-sm)] font-bold text-[var(--color-ink)]">
+                ESG Calculator
+              </h3>
+              <div className="bg-[#ecfdf5] border border-[#a7f3d0] rounded-[var(--radius-md)] p-4 text-[#065f46]">
+                <Leaf className="w-5 h-5 mb-2" />
+                <p className="text-[var(--text-2xl)] font-bold leading-none mb-1">135 <span className="text-[var(--text-sm)] font-normal">kg</span></p>
+                <p className="text-[var(--text-xs)] font-medium uppercase tracking-wider opacity-80">CO₂ Reduced / Month</p>
+              </div>
+              <div className="bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] p-4 text-[var(--color-ink)]">
+                <TrendingDown className="w-5 h-5 mb-2 text-[var(--color-accent)]" />
+                <p className="text-[var(--text-2xl)] font-bold leading-none mb-1">RM 254.70</p>
+                <p className="text-[var(--text-xs)] font-medium uppercase tracking-wider text-[var(--color-ink-3)]">Total Financial Value</p>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Main Content Area */}
+        {/* Main Content Area - Geographic Map & Results */}
         <div className="flex-1 min-w-0">
-          
-          {/* Tabs */}
           <div className="flex border-b border-[var(--color-border)] mb-6">
-            <button 
-              className="px-4 py-2 text-[var(--text-sm)] font-medium transition-colors border-b-2 -mb-px text-[var(--color-accent)] border-[var(--color-accent)]"
-            >
-              Overview
+            <button className="px-4 py-2 text-[var(--text-sm)] font-medium transition-colors border-b-2 -mb-px text-[var(--color-accent)] border-[var(--color-accent)]">
+              NOVA Geographic Allocation Simulator
             </button>
           </div>
 
-          <div className="space-y-10">
-              {/* Section: Optimisation Runs */}
-              <section>
-                <h2 className="text-[var(--text-base)] font-bold text-[var(--color-ink)] mb-4">Optimisation Runs</h2>
-                
-                <div className="border border-[var(--color-border)] rounded-[var(--radius-md)] overflow-hidden bg-white">
-                  <table className="w-full text-left text-[var(--text-sm)]">
-                    <thead className="bg-[var(--color-paper-2)] border-b border-[var(--color-border)]">
-                      <tr>
-                        <th className="px-4 py-3 font-medium text-[var(--color-ink-2)]">RUN ID</th>
-                        <th className="px-4 py-3 font-medium text-[var(--color-ink-2)]">STATUS</th>
-                        <th className="px-4 py-3 font-medium text-[var(--color-ink-2)]">TARGET</th>
-                        <th className="px-4 py-3 font-medium text-[var(--color-ink-2)] text-right">RESULTS</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[var(--color-border)]">
-                      {optStatus === "running" && (
-                        <tr>
-                          <td className="px-4 py-3 text-[var(--color-ink)] font-medium">OPT-0023</td>
-                          <td className="px-4 py-3">
-                            <span className="inline-flex items-center text-[var(--text-xs)] font-medium text-[var(--color-ink-2)] bg-[var(--color-paper-3)] px-2 py-0.5 rounded">
-                              <div className="w-3 h-3 border border-[var(--color-ink-3)] border-t-transparent rounded-full animate-spin mr-1"></div> Running
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-[var(--color-ink-2)]">Maximum Solar</td>
-                          <td className="px-4 py-3 text-[var(--color-ink-3)] text-right">Calculating...</td>
-                        </tr>
-                      )}
-                      {(optStatus === "rejected" || optStatus === "approved") && (
-                        <tr>
-                          <td className="px-4 py-3 text-[var(--color-ink)] font-medium">OPT-0023</td>
-                          <td className="px-4 py-3">
-                            <span className="inline-flex items-center text-[var(--text-xs)] font-medium text-[var(--color-error)] bg-[var(--color-error-bg)] px-2 py-0.5 rounded">
-                              <X className="w-3 h-3 mr-1" /> Failed Constraint
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-[var(--color-ink-2)]">Maximum Solar</td>
-                          <td className="px-4 py-3 text-[var(--color-ink-3)] text-right">Rejected by Risk Agent</td>
-                        </tr>
-                      )}
-                      {optStatus === "approved" && (
-                        <tr>
-                          <td className="px-4 py-3 text-[var(--color-ink)] font-medium">OPT-0024</td>
-                          <td className="px-4 py-3">
-                            <span className="inline-flex items-center text-[var(--text-xs)] font-medium text-[var(--color-success)] bg-[var(--color-success-bg)] px-2 py-0.5 rounded">
-                              <Check className="w-3 h-3 mr-1" /> Succeeded
-                            </span>
-                          </td>
-                          <td className="px-4 py-3 text-[var(--color-ink-2)]">Max Solar (Adjusted)</td>
-                          <td className="px-4 py-3 text-[var(--color-ink)] font-medium text-right">89% Solar Utilisation</td>
-                        </tr>
-                      )}
-                      <tr>
-                        <td className="px-4 py-3 text-[var(--color-ink)] font-medium">OPT-0022</td>
-                        <td className="px-4 py-3">
-                          <span className="inline-flex items-center text-[var(--text-xs)] font-medium text-[var(--color-success)] bg-[var(--color-success-bg)] px-2 py-0.5 rounded">
-                            <Check className="w-3 h-3 mr-1" /> Succeeded
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-[var(--color-ink-2)]">Load Balancing</td>
-                        <td className="px-4 py-3 text-[var(--color-ink-2)] text-right">64% Solar Utilisation</td>
-                      </tr>
-                      <tr>
-                        <td className="px-4 py-3 text-[var(--color-ink)] font-medium">OPT-0021</td>
-                        <td className="px-4 py-3">
-                          <span className="inline-flex items-center text-[var(--text-xs)] font-medium text-[var(--color-success)] bg-[var(--color-success-bg)] px-2 py-0.5 rounded">
-                            <Check className="w-3 h-3 mr-1" /> Succeeded
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-[var(--color-ink-2)]">Cost Minimization</td>
-                        <td className="px-4 py-3 text-[var(--color-ink-2)] text-right">RM 840.00 Saved</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </section>
+          <div className="space-y-6">
+            <p className="text-[var(--text-sm)] text-[var(--color-ink-2)]">
+              Visualising the flow of solar energy and virtual export credits across multiple designated business premises based on highest unpaid grid import.
+            </p>
 
-              {/* Section: Metrics */}
-              <section>
-                <h2 className="text-[var(--text-base)] font-bold text-[var(--color-ink)] mb-4">Network Metrics</h2>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="border border-[var(--color-border)] rounded-[var(--radius-md)] p-6 bg-white">
-                    <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider mb-1">Solar Utilisation</p>
-                    <p className="text-[var(--text-2xl)] font-bold text-[var(--color-ink)]">
-                      {optStatus === "approved" ? "89%" : "64%"}
-                    </p>
-                  </div>
-                  
-                  <div className="border border-[var(--color-border)] rounded-[var(--radius-md)] p-6 bg-white">
-                    <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider mb-1">Grid Import</p>
-                    <p className="text-[var(--text-2xl)] font-bold text-[var(--color-ink)]">
-                      {optStatus === "approved" ? "37 kWh" : "52 kWh"}
-                    </p>
-                  </div>
-                </div>
-              </section>
-            </div>
-        </div>
-
-        {/* Right Sidebar - KitaAI Insights (The "Customer insights" panel equivalent) */}
-        <div className="w-full lg:w-80 flex-shrink-0">
-          <div className="bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] shadow-sm sticky top-20 overflow-hidden flex flex-col max-h-[calc(100vh-6rem)]">
-            <div className="bg-[var(--color-accent)] text-white px-4 py-2 text-[var(--text-xs)] font-bold tracking-wider flex items-center justify-between">
-              KITAAI AGENTS
-            </div>
-            
-            <div className="p-5 border-b border-[var(--color-border)] bg-[var(--color-paper-2)]">
-              <h3 className="text-[var(--text-base)] font-bold text-[var(--color-ink)]">Risk Agent Insights</h3>
-              <p className="text-[var(--text-sm)] text-[var(--color-ink-2)] mt-1">
-                See the latest validation feedback for the current schedule.
-              </p>
-            </div>
-
-            <div className="p-5 flex-1 overflow-y-auto space-y-6">
+            {/* Geographic Map Visualization (CSS/SVG based) */}
+            <div className="border border-[var(--color-border)] rounded-[var(--radius-lg)] bg-[var(--color-paper-2)] p-8 relative overflow-hidden min-h-[400px] flex items-center justify-center">
               
               {optStatus === "idle" && (
-                <div className="text-[var(--text-sm)] text-[var(--color-ink-3)] text-center py-8">
-                  Run an optimisation to see insights.
+                <div className="text-[var(--text-sm)] text-[var(--color-ink-3)] text-center">
+                  Run the solver to visualize NOVA credit allocations.
                 </div>
               )}
 
               {optStatus === "running" && (
-                <div className="text-[var(--text-sm)] text-[var(--color-ink-2)] text-center py-8 flex flex-col items-center">
-                  <div className="w-6 h-6 border-2 border-[var(--color-border)] border-t-[var(--color-accent)] rounded-full animate-spin mb-3"></div>
-                  Analyzing constraints...
-                </div>
-              )}
-
-              {optStatus === "rejected" && (
-                <div className="space-y-4 animate-in fade-in duration-[var(--dur-base)]">
-                  <div className="flex items-start text-[var(--text-sm)]">
-                    <AlertTriangle className="w-4 h-4 text-[var(--color-error)] mt-0.5 mr-2 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium text-[var(--color-ink)]">Constraint Violation</p>
-                      <p className="text-[var(--color-ink-2)] mt-1">
-                        The schedule placed 20 kWh of washing load inside Aisyah Laundry's busiest customer period (12:00 - 14:00).
-                      </p>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={reoptimise}
-                    className="w-full bg-white border border-[var(--color-border)] hover:bg-[var(--color-paper-2)] text-[var(--color-ink)] px-3 py-2 rounded-[var(--radius-sm)] text-[var(--text-sm)] font-medium transition-colors"
-                  >
-                    Apply Fix & Re-run
-                  </button>
+                <div className="text-[var(--text-sm)] text-[var(--color-ink-2)] text-center flex flex-col items-center">
+                  <div className="w-8 h-8 border-2 border-[var(--color-border)] border-t-[var(--color-accent)] rounded-full animate-spin mb-4"></div>
+                  Calculating optimal branch allocation paths...
                 </div>
               )}
 
               {optStatus === "approved" && (
-                <div className="space-y-4 animate-in fade-in duration-[var(--dur-base)]">
-                  <div className="flex items-start text-[var(--text-sm)]">
-                    <Check className="w-4 h-4 text-[var(--color-success)] mt-0.5 mr-2 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium text-[var(--color-ink)]">Schedule Validated</p>
-                      <p className="text-[var(--color-ink-2)] mt-1">
-                        All constraints satisfied.
-                      </p>
+                <div className="relative w-full max-w-2xl mx-auto h-[300px] animate-in fade-in zoom-in-95 duration-500">
+                  {/* Central Node (Producer) */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                    <div className="bg-white border-2 border-[var(--color-accent)] rounded-full w-24 h-24 flex flex-col items-center justify-center shadow-md relative">
+                      <div className="absolute -top-2 -right-2 bg-[var(--color-success)] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">HQ</div>
+                      <Zap className="w-6 h-6 text-[var(--color-accent)] mb-1" />
+                      <span className="text-[var(--text-xs)] font-bold text-[var(--color-ink)]">Branch A</span>
+                      <span className="text-[10px] text-[var(--color-ink-2)]">Solar Roof</span>
                     </div>
                   </div>
-                  
-                  <div className="pt-4 border-t border-[var(--color-border)]">
-                    <p className="font-medium text-[var(--text-sm)] text-[var(--color-ink)] mb-2">Audit Trail</p>
-                    <ul className="text-[var(--text-sm)] text-[var(--color-ink-2)] space-y-2">
-                      <li className="flex items-center">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] mr-2"></div>
-                        8 kWh allocated at 11:00
-                      </li>
-                      <li className="flex items-center">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] mr-2"></div>
-                        12 kWh allocated at 15:00
-                      </li>
-                    </ul>
+
+                  {/* Lines to Receivers */}
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
+                    {/* Line to B */}
+                    <path d="M 50% 50% L 20% 20%" stroke="var(--color-accent)" strokeWidth="2" strokeDasharray="4 4" className="animate-[dash_20s_linear_infinite]" />
+                    {/* Line to C */}
+                    <path d="M 50% 50% L 80% 20%" stroke="var(--color-accent)" strokeWidth="2" strokeDasharray="4 4" className="animate-[dash_20s_linear_infinite]" />
+                    {/* Line to D */}
+                    <path d="M 50% 50% L 50% 85%" stroke="var(--color-border)" strokeWidth="2" strokeDasharray="4 4" />
+                  </svg>
+                  <style jsx>{`
+                    @keyframes dash {
+                      to {
+                        stroke-dashoffset: -1000;
+                      }
+                    }
+                  `}</style>
+
+                  {/* Receiver Node B */}
+                  <div className="absolute top-[5%] left-[5%] z-10">
+                    <div className="bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] p-3 shadow-sm flex flex-col items-center w-32">
+                      <Building className="w-5 h-5 text-[var(--color-ink-2)] mb-1" />
+                      <span className="text-[var(--text-xs)] font-bold text-[var(--color-ink)]">Branch B</span>
+                      <span className="text-[10px] text-[var(--color-success)] font-medium">+ RM 120 Offset</span>
+                      <span className="text-[10px] text-[var(--color-ink-3)]">60% Allocation</span>
+                    </div>
+                  </div>
+
+                  {/* Receiver Node C */}
+                  <div className="absolute top-[5%] right-[5%] z-10">
+                    <div className="bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] p-3 shadow-sm flex flex-col items-center w-32">
+                      <Building className="w-5 h-5 text-[var(--color-ink-2)] mb-1" />
+                      <span className="text-[var(--text-xs)] font-bold text-[var(--color-ink)]">Branch C</span>
+                      <span className="text-[10px] text-[var(--color-success)] font-medium">+ RM 60 Offset</span>
+                      <span className="text-[10px] text-[var(--color-ink-3)]">30% Allocation</span>
+                    </div>
+                  </div>
+
+                  {/* Receiver Node D */}
+                  <div className="absolute bottom-[0%] left-1/2 -translate-x-1/2 z-10">
+                    <div className="bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] p-3 shadow-sm flex flex-col items-center w-32 opacity-70">
+                      <Building className="w-5 h-5 text-[var(--color-ink-2)] mb-1" />
+                      <span className="text-[var(--text-xs)] font-bold text-[var(--color-ink)]">Branch D</span>
+                      <span className="text-[10px] text-[var(--color-ink-3)]">No Offset Needed</span>
+                      <span className="text-[10px] text-[var(--color-ink-3)]">Low Base Load</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {optStatus === "approved" && (
+              <div className="grid grid-cols-3 gap-4 text-center border border-[var(--color-border)] rounded-[var(--radius-md)] p-4 bg-white shadow-sm">
+                <div>
+                  <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider">Total Surplus Exported</p>
+                  <p className="text-[var(--text-lg)] font-bold text-[var(--color-ink)] mt-1">3.8 kWh</p>
+                </div>
+                <div className="border-l border-r border-[var(--color-border)]">
+                  <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider">Credit Value Generated</p>
+                  <p className="text-[var(--text-lg)] font-bold text-[var(--color-ink)] mt-1">RM 180.00</p>
+                </div>
+                <div>
+                  <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider">Allocation Efficiency</p>
+                  <p className="text-[var(--text-lg)] font-bold text-[var(--color-success)] mt-1">100% Offset</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right Sidebar - Zero-Hallucination Recommendation Layer */}
+        <div className="w-full lg:w-80 flex-shrink-0">
+          <div className="bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] shadow-sm sticky top-20 overflow-hidden flex flex-col max-h-[calc(100vh-6rem)]">
+            <div className="bg-[var(--color-ink)] text-white px-4 py-2 text-[var(--text-xs)] font-bold tracking-wider flex items-center justify-between">
+              FINAL DASHBOARD OUTPUT
+            </div>
+            
+            <div className="p-5 border-b border-[var(--color-border)] bg-[var(--color-paper-2)]">
+              <h3 className="text-[var(--text-base)] font-bold text-[var(--color-ink)]">Zero-Hallucination Layer</h3>
+              <p className="text-[var(--text-sm)] text-[var(--color-ink-2)] mt-1">
+                Deterministic, evidence-backed action cards based directly on the math pipeline.
+              </p>
+            </div>
+
+            <div className="p-5 flex-1 overflow-y-auto space-y-4">
+              
+              {optStatus !== "approved" ? (
+                <div className="text-[var(--text-sm)] text-[var(--color-ink-3)] text-center py-8">
+                  Run solver to generate recommendations.
+                </div>
+              ) : (
+                <div className="animate-in fade-in duration-[var(--dur-base)] space-y-4">
+                  {/* Action Card 1 */}
+                  <div className="border border-[var(--color-border)] rounded-[var(--radius-md)] p-4 bg-white">
+                    <p className="text-[10px] font-bold text-[var(--color-ink-3)] uppercase tracking-wider mb-2">Validated Finding: Anomaly</p>
+                    <p className="text-[var(--text-sm)] font-medium text-[var(--color-ink)] mb-2">
+                      Your continuous baseline load is higher than historical averages.
+                    </p>
+                    <p className="text-[var(--text-xs)] text-[var(--color-ink-2)] flex items-start bg-[var(--color-paper-2)] p-2 rounded">
+                      <CheckCircle2 className="w-3 h-3 text-[var(--color-success)] mr-1.5 mt-0.5 flex-shrink-0" />
+                      Check AC/refrigeration units for maintenance. Est. saving: RM90/mo.
+                    </p>
+                  </div>
+
+                  {/* Action Card 2 */}
+                  <div className="border border-[var(--color-border)] rounded-[var(--radius-md)] p-4 bg-white">
+                    <p className="text-[10px] font-bold text-[var(--color-ink-3)] uppercase tracking-wider mb-2">Validated Finding: Strategy</p>
+                    <p className="text-[var(--text-sm)] font-medium text-[var(--color-ink)] mb-2">
+                      Your solar energy is worth more if used directly than exported.
+                    </p>
+                    <p className="text-[var(--text-xs)] text-[var(--color-ink-2)] flex items-start bg-[var(--color-paper-2)] p-2 rounded">
+                      <CheckCircle2 className="w-3 h-3 text-[var(--color-success)] mr-1.5 mt-0.5 flex-shrink-0" />
+                      Shift washing cycles to 1pm. Shifts 4.5 kWh/day.
+                    </p>
+                  </div>
+
+                  {/* Action Card 3 */}
+                  <div className="border border-[var(--color-accent)] border-opacity-30 rounded-[var(--radius-md)] p-4 bg-[#eef2ff]">
+                    <p className="text-[10px] font-bold text-[var(--color-accent)] uppercase tracking-wider mb-2">Validated Finding: Allocation</p>
+                    <p className="text-[var(--text-sm)] font-medium text-[var(--color-ink)] mb-2">
+                      60% of surplus credit routed to Branch B to offset highest unpaid grid import.
+                    </p>
+                    <p className="text-[var(--text-xs)] text-[var(--color-ink-2)] flex items-start bg-white bg-opacity-60 p-2 rounded">
+                      <CheckCircle2 className="w-3 h-3 text-[var(--color-accent)] mr-1.5 mt-0.5 flex-shrink-0" />
+                      Branch B bill reduced by RM 120. No action required.
+                    </p>
                   </div>
                 </div>
               )}

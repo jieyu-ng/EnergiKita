@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Cpu, CheckCircle2 } from "lucide-react";
 
 export default function OnboardPage() {
   const router = useRouter();
@@ -16,15 +17,49 @@ export default function OnboardPage() {
   };
 
   return (
-    <div className="flex flex-col items-center pt-16 px-6">
+    <div className="flex flex-col items-center pt-16 pb-32 px-6">
       <div className="max-w-[var(--content-width)] w-full max-w-2xl space-y-8">
         
-        <div className="space-y-2">
+        {/* Equipment Inference Agent Output */}
+        <div className="bg-[var(--color-paper-2)] rounded-[var(--radius-lg)] border border-[var(--color-border)] p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-[var(--text-base)] font-bold text-[var(--color-ink)] flex items-center">
+              <Cpu className="w-5 h-5 mr-2 text-[var(--color-accent)]" />
+              Equipment Inference Agent
+            </h2>
+            <span className="inline-flex items-center text-[var(--text-xs)] font-medium text-[var(--color-ink-2)] bg-[var(--color-paper-3)] px-2 py-0.5 rounded border border-[var(--color-border)]">
+              Confidence: 0.71
+            </span>
+          </div>
+          
+          <div className="bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] p-4">
+            <p className="text-[var(--text-sm)] text-[var(--color-ink)] font-medium mb-3">Probable Contributor: <span className="text-[var(--color-accent)]">Air Conditioning / Continuous Refrigeration</span></p>
+            <div className="space-y-2">
+              <p className="text-[var(--text-xs)] font-bold text-[var(--color-ink-3)] uppercase tracking-wider">Evidence Trail</p>
+              <ul className="space-y-1.5">
+                <li className="flex items-start text-[var(--text-sm)] text-[var(--color-ink-2)]">
+                  <CheckCircle2 className="w-4 h-4 mr-2 text-[var(--color-success)] flex-shrink-0 mt-0.5" />
+                  Long operating hours inferred from base load.
+                </li>
+                <li className="flex items-start text-[var(--text-sm)] text-[var(--color-ink-2)]">
+                  <CheckCircle2 className="w-4 h-4 mr-2 text-[var(--color-success)] flex-shrink-0 mt-0.5" />
+                  High daytime load assumption matches commercial cooling profile.
+                </li>
+                <li className="flex items-start text-[var(--text-sm)] text-[var(--color-ink-2)]">
+                  <CheckCircle2 className="w-4 h-4 mr-2 text-[var(--color-success)] flex-shrink-0 mt-0.5" />
+                  Usage spike (+18.6%) compared with previous month correlates with recent temperature increases.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-2 pt-4">
           <h1 className="text-[var(--text-3xl)] font-bold text-[var(--color-ink)] tracking-tight">
-            Business Context
+            Business & Solar Context Input
           </h1>
           <p className="text-[var(--text-base)] text-[var(--color-ink-2)]">
-            Tell us about your operations to accurately identify your most flexible energy periods.
+            Verify the inferred equipment and provide operational constraints for the solar routing engine.
           </p>
         </div>
 
@@ -32,74 +67,83 @@ export default function OnboardPage() {
           <div className="bg-white rounded-[var(--radius-lg)] border border-[var(--color-border)] shadow-sm p-8 space-y-8 relative">
             
             {isSubmitting && (
-              <div className="absolute inset-0 z-10 bg-white/80 flex flex-col items-center justify-center">
+              <div className="absolute inset-0 z-10 bg-white/80 flex flex-col items-center justify-center rounded-[var(--radius-lg)]">
                 <div className="w-8 h-8 border-2 border-[var(--color-border)] border-t-[var(--color-accent)] rounded-full animate-spin mb-4"></div>
                 <p className="text-[var(--text-sm)] font-medium text-[var(--color-ink)]">
-                  Generating Profile...
+                  Simulating Solar Scenarios...
                 </p>
               </div>
             )}
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="block text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Business Type</label>
-                <input 
-                  type="text" 
-                  defaultValue="Laundromat" 
-                  className="w-full bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-1 focus:ring-[var(--color-accent)] transition-all"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Operating Hours</label>
-                <div className="flex items-center space-x-2">
+            <div>
+              <h3 className="text-[var(--text-sm)] font-bold text-[var(--color-ink)] mb-4 pb-2 border-b border-[var(--color-border)]">Business Constraints</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="block text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Primary Equipment</label>
                   <input 
-                    type="time" 
-                    defaultValue="08:00" 
+                    type="text" 
+                    defaultValue="Air Conditioning & Dryers" 
                     className="w-full bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-1 focus:ring-[var(--color-accent)] transition-all"
                   />
-                  <span className="text-[var(--text-sm)] text-[var(--color-ink-2)]">to</span>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="block text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Flexible Equipment</label>
                   <input 
-                    type="time" 
-                    defaultValue="22:00" 
+                    type="text" 
+                    defaultValue="Washing cycles (1-2 hour delay ok)" 
                     className="w-full bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-1 focus:ring-[var(--color-accent)] transition-all"
                   />
+                </div>
+
+                <div className="space-y-2 md:col-span-2">
+                  <label className="block text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Operating Hours vs Busy Hours</label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center space-x-2">
+                      <input type="time" defaultValue="08:00" className="w-full bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)]" />
+                      <span className="text-[var(--text-sm)] text-[var(--color-ink-2)]">to</span>
+                      <input type="time" defaultValue="22:00" className="w-full bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)]" />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-[var(--text-sm)] text-[var(--color-ink-2)] font-medium mr-2">Peak:</span>
+                      <input type="time" defaultValue="12:00" className="w-full border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)]" />
+                      <span className="text-[var(--text-sm)] text-[var(--color-ink-2)]">-</span>
+                      <input type="time" defaultValue="14:00" className="w-full border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)]" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="block text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Highest Electricity Consumption Equipment</label>
-              <input 
-                type="text" 
-                defaultValue="Washing machines and dryers" 
-                className="w-full bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-1 focus:ring-[var(--color-accent)] transition-all"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Flexible Activities (1-2 hour delay)</label>
-              <textarea 
-                defaultValue="Some washing cycles can be delayed, but customers wait for dryers" 
-                rows={2}
-                className="w-full bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-1 focus:ring-[var(--color-accent)] transition-all resize-none"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Busiest Customer Period</label>
-              <div className="flex items-center space-x-2 max-w-[50%]">
-                <input 
-                  type="time" 
-                  defaultValue="12:00" 
-                  className="w-full bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-1 focus:ring-[var(--color-accent)] transition-all"
-                />
-                <span className="text-[var(--text-sm)] text-[var(--color-ink-2)]">to</span>
-                <input 
-                  type="time" 
-                  defaultValue="14:00" 
-                  className="w-full bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-1 focus:ring-[var(--color-accent)] transition-all"
-                />
+            <div>
+              <h3 className="text-[var(--text-sm)] font-bold text-[var(--color-ink)] mb-4 pb-2 border-b border-[var(--color-border)]">Solar Parameters</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <label className="block text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Solar Capacity (kWp)</label>
+                  <input 
+                    type="number" 
+                    defaultValue="12" 
+                    className="w-full bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)]"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Import Rate (RM/kWh)</label>
+                  <input 
+                    type="number" 
+                    step="0.01"
+                    defaultValue="0.50" 
+                    className="w-full bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)]"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Export Credit (RM/kWh)</label>
+                  <input 
+                    type="number" 
+                    step="0.01"
+                    defaultValue="0.25" 
+                    className="w-full bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] text-[var(--color-ink)]"
+                  />
+                </div>
               </div>
             </div>
 
@@ -118,7 +162,7 @@ export default function OnboardPage() {
               disabled={isSubmitting}
               className="bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white px-6 py-2.5 rounded-[var(--radius-md)] text-[var(--text-sm)] font-medium shadow-sm disabled:opacity-50 transition-colors"
             >
-              Generate Passport
+              Pass to Solar Tech Agent
             </button>
           </div>
         </form>
