@@ -10,7 +10,6 @@ export default function OnboardPage() {
   const router = useRouter();
   const { accountType } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [qStep, setQStep] = useState(1);
   const [acCount, setAcCount] = useState(2);
   const [fridgeCount, setFridgeCount] = useState(1);
   const [heaterHours, setHeaterHours] = useState(2);
@@ -20,12 +19,7 @@ export default function OnboardPage() {
     e.preventDefault();
     setIsSubmitting(true);
     setTimeout(() => {
-      if (accountType === "business") {
-        router.push("/passport");
-      } else {
-        setIsSubmitting(false);
-        setQStep(2);
-      }
+      router.push("/passport");
     }, 1500);
   };
 
@@ -187,7 +181,6 @@ export default function OnboardPage() {
           </>
         ) : (
           <div className="space-y-6 pt-4">
-            {qStep === 1 ? (
               <>
                 <div className="space-y-2">
                   <h1 className="text-[var(--text-3xl)] font-bold text-[var(--color-ink)] tracking-tight">
@@ -255,44 +248,6 @@ export default function OnboardPage() {
                   </div>
                 </form>
               </>
-            ) : (
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <h1 className="text-[var(--text-3xl)] font-bold text-[var(--color-ink)] tracking-tight">
-                    AI Energy Advice
-                  </h1>
-                  <p className="text-[var(--text-base)] text-[var(--color-ink-2)]">
-                    Based on your profile and Malaysia TNB baselines.
-                  </p>
-                </div>
-                
-                <div className="bg-white rounded-[var(--radius-lg)] border border-[var(--color-success)] shadow-sm p-6 space-y-4">
-                  <div className="flex items-start">
-                    <Cpu className="w-6 h-6 text-[var(--color-success)] mr-3 flex-shrink-0" />
-                    <div>
-                      <h3 className="font-bold text-[var(--text-base)] text-[var(--color-ink)]">Analysis Complete</h3>
-                      <p className="text-[var(--text-sm)] text-[var(--color-ink-2)] mt-2 leading-relaxed">
-                        Your {acCount} AC units are consuming approximately <strong>{demoAiAdvice.ac_consumption_percentage}% of your RM {demoAiAdvice.base_bill_rm} bill</strong>. Since you use <strong>{cookingType} cooking</strong> and {heaterHours} hours of water heating daily, your peak loads hit during the {demoAiAdvice.peak_load_time}.
-                      </p>
-                      <div className="mt-4 p-4 bg-[#ecfdf5] border border-[#a7f3d0] rounded-[var(--radius-md)]">
-                        <p className="text-[var(--text-sm)] font-medium text-[#065f46]">
-                          💡 Advice: {demoAiAdvice.advice}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex justify-end pt-4">
-                  <button 
-                    onClick={() => router.push("/passport")}
-                    className="bg-[var(--color-success)] hover:bg-[#059669] text-white px-6 py-2.5 rounded-[var(--radius-md)] text-[var(--text-sm)] font-medium shadow-sm transition-colors"
-                  >
-                    Generate Home Energy Passport
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         )}
       </div>
