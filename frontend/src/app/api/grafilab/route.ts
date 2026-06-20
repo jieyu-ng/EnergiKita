@@ -36,7 +36,9 @@ Given the household profile below, return only valid JSON with this exact schema
     "expensiveTierUsage": number,
     "kwhToNextCheaperTier": number,
     "potentialSavingsTo300": number,
+    "benchmarkKwh": number,
     "benchmarkDeltaPercent": number,
+    "trendDeltaPercent": number,
     "dominantDriver": string,
     "energyScore": number,
     "scoreBreakdown": {
@@ -65,6 +67,9 @@ Structured inputs:
 - Water heater hours/day: ${body.heaterHours}
 - Lighting type: ${body.lightingType}
 - Cooking type: ${body.cookingType}
+- Previous bill kWh: ${body.previousBillKwh ?? "none"}
+- Recent average kWh: ${body.recentAverageKwh ?? "none"}
+- Last action follow-through: ${body.lastActionStatus ?? "none"}
 
 Deterministic diagnosis from the platform:
 - Usage band: ${diagnosis.usageBand}
@@ -75,6 +80,7 @@ Deterministic diagnosis from the platform:
 - Estimated savings if user gets back to 300 kWh: RM ${diagnosis.potentialSavingsTo300}
 - Benchmark for similar home: ${diagnosis.benchmarkKwh} kWh
 - Benchmark delta: ${diagnosis.benchmarkDeltaPercent}%
+- Bill trend versus previous month: ${diagnosis.trendDeltaPercent}%
 - Likely dominant driver: ${diagnosis.dominantDriver}
 - Driver score: ${diagnosis.driverScore}
 - Platform energy score: ${diagnosis.energyScore}/100
@@ -89,6 +95,8 @@ Rules:
 - benchmarkInsight should compare the household against similar homes.
 - rootCause should clearly say what is likely driving the bill.
 - tariffInsight should mention the 300 kWh threshold and why it matters.
+- Use recent bill history when present so the recommendation feels adaptive instead of generic.
+- Prefer no-cost or low-cost first actions before recommending purchases.
 - diagnosis must mirror the deterministic platform values exactly with no changes.
 - Keep it practical and concise.
 - Confidence must be between 0 and 1.
@@ -146,7 +154,9 @@ Do not include markdown fences or extra text.
         expensiveTierUsage: diagnosis.expensiveTierUsage,
         kwhToNextCheaperTier: diagnosis.kwhToNextCheaperTier,
         potentialSavingsTo300: diagnosis.potentialSavingsTo300,
+        benchmarkKwh: diagnosis.benchmarkKwh,
         benchmarkDeltaPercent: diagnosis.benchmarkDeltaPercent,
+        trendDeltaPercent: diagnosis.trendDeltaPercent,
         dominantDriver: diagnosis.dominantDriver,
         energyScore: diagnosis.energyScore,
         scoreBreakdown: diagnosis.scoreBreakdown,

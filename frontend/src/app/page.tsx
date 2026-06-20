@@ -11,8 +11,6 @@ import {
   updateMonthlyInsightAction,
 } from "@/lib/energy-memory";
 import {
-  exportExtractionTelemetryJson,
-  getAllSourceReliabilitySummaries,
   getSourceReliabilitySummary,
   saveExtractionTelemetry,
   type ExtractionFieldName,
@@ -69,20 +67,10 @@ export default function Home() {
   const [originalExtractedData, setOriginalExtractedData] = useState<any>(null);
   const [history, setHistory] = useState<MonthlyInsightRecord[]>([]);
   const [sourceReliabilityMessage, setSourceReliabilityMessage] = useState("");
-  const [telemetrySummaries, setTelemetrySummaries] = useState<
-    Array<{
-      source: string;
-      totalRecords: number;
-      correctionRate: number;
-      averageConfidence: number | null;
-      topCorrectedFields: ExtractionFieldName[];
-    }>
-  >([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setHistory(loadMonthlyHistory());
-    setTelemetrySummaries(getAllSourceReliabilitySummaries());
   }, []);
 
   useEffect(() => {
@@ -95,7 +83,6 @@ export default function Home() {
 
   const refreshHistory = () => {
     setHistory(loadMonthlyHistory());
-    setTelemetrySummaries(getAllSourceReliabilitySummaries());
   };
 
   const saveBillSnapshot = (data: {
@@ -178,7 +165,7 @@ export default function Home() {
             setExtractionPayload({
               ...json,
               source: json.source ?? "json_upload",
-              extraction_notes: json.extraction_notes ?? ["Structured data loaded directly from JSON bill export."],
+              extraction_notes: json.extraction_notes ?? ["We loaded these bill fields directly from your structured bill file."],
             });
             setStep(3);
           }, 1000);
@@ -219,7 +206,7 @@ export default function Home() {
         setStep(3);
       })
       .catch(() => {
-        runMockExtraction("Unable to load the bundled sample fixture.");
+        runMockExtraction("Unable to load the bundled sample bill.");
       });
   };
 
@@ -235,8 +222,8 @@ export default function Home() {
           confidence: 0.94,
           source: fallbackReason ? "fallback_mock" : "pdf_extracted",
           extraction_notes: fallbackReason
-            ? [`Fallback mock data used because extraction failed: ${fallbackReason}`]
-            : ["Demo mock data used for business flow preview."],
+            ? [`We could not fully extract this bill, so we prepared estimated review values: ${fallbackReason}`]
+            : ["We prepared business review values so you can continue the workflow while testing the platform."],
         });
       } else {
         setExtractionPayload({
@@ -247,8 +234,8 @@ export default function Home() {
           confidence: 0.96,
           source: fallbackReason ? "fallback_mock" : "pdf_extracted",
           extraction_notes: fallbackReason
-            ? [`Fallback mock data used because extraction failed: ${fallbackReason}`]
-            : ["Demo mock data used for household flow preview."],
+            ? [`We could not fully extract this bill, so we prepared estimated review values: ${fallbackReason}`]
+            : ["We prepared household review values so you can continue the workflow while testing the platform."],
         });
       }
       setStep(3);
@@ -266,10 +253,10 @@ export default function Home() {
         ? "Image Extracted"
         : extractedData?.source === "sample_json_fixture"
           ? "Sample Fixture"
-          : extractedData?.source === "json_upload"
-            ? "JSON Upload"
+            : extractedData?.source === "json_upload"
+              ? "JSON Upload"
             : extractedData?.source === "fallback_mock"
-              ? "Fallback Mock"
+              ? "Estimated Review"
               : "Structured Output";
   const confidencePercent = typeof extractedData?.confidence === "number"
     ? `${Math.round(extractedData.confidence * 100)}%`
@@ -318,16 +305,6 @@ export default function Home() {
     : null;
   const essentialSavingsAction = latestRecord ? buildEssentialSavingsAction(latestRecord) : null;
   const recommendationReasons = latestRecord ? buildRecommendationReasons(latestRecord) : [];
-
-  const downloadTelemetryExport = () => {
-    const blob = new Blob([exportExtractionTelemetryJson()], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = "energiKita-extraction-telemetry.json";
-    anchor.click();
-    URL.revokeObjectURL(url);
-  };
 
   return (
     <div className="flex flex-col items-center justify-center pt-24 pb-32 px-6">
@@ -401,85 +378,52 @@ export default function Home() {
               </div>
             </div>
 
-            {telemetrySummaries.length > 0 && (
-              <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-white p-5 shadow-sm">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-ink-3)]">Internal Extraction Analytics</p>
-                    <p className="mt-1 text-[var(--text-sm)] text-[var(--color-ink-2)]">
-                      Internal view of how EnergiKita learns from reviewed bill corrections across upload sources.
-                    </p>
-                  </div>
-                  <button
-                    onClick={downloadTelemetryExport}
-                    className="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-white px-3 py-2 text-[var(--text-xs)] font-medium text-[var(--color-ink)] transition-colors hover:bg-[var(--color-paper-2)]"
-                  >
-                    Export Telemetry JSON
-                  </button>
-                </div>
-                <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
-                  {telemetrySummaries.map((summary) => (
-                    <div key={summary.source} className="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-paper-2)] p-4">
-                      <p className="text-[10px] uppercase tracking-wider text-[var(--color-ink-3)]">{summary.source}</p>
-                      <p className="mt-2 text-[var(--text-sm)] font-medium text-[var(--color-ink)]">
-                        {Math.round(summary.correctionRate * 100)}% correction rate
-                      </p>
-                      <p className="mt-1 text-[var(--text-xs)] text-[var(--color-ink-2)]">
-                        {summary.totalRecords} reviewed extraction{summary.totalRecords === 1 ? "" : "s"}
-                      </p>
-                      <p className="mt-2 text-[var(--text-xs)] text-[var(--color-ink-2)]">
-                        Avg confidence:{" "}
-                        {summary.averageConfidence === null
-                          ? "N/A"
-                          : `${Math.round(summary.averageConfidence * 100)}%`}
-                      </p>
-                      <p className="mt-2 text-[var(--text-xs)] text-[var(--color-ink-2)]">
-                        Most corrected:{" "}
-                        {summary.topCorrectedFields.length > 0
-                          ? summary.topCorrectedFields.map((field) => fieldLabels[field]).join(", ")
-                          : "None yet"}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.4fr_1fr]">
-              <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-white p-5 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-ink-3)]">3-Month Trend</p>
-                    <p className="mt-1 text-[var(--text-sm)] text-[var(--color-ink-2)]">
-                      Watch whether your bill and savings potential are moving in the right direction.
+              <div>
+                {trendData.length >= 2 ? (
+                  <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-white p-5 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] uppercase tracking-wider text-[var(--color-ink-3)]">3-Month Trend</p>
+                        <p className="mt-1 text-[var(--text-sm)] text-[var(--color-ink-2)]">
+                          Watch whether your bill and savings potential are moving in the right direction.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-4 h-56">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={trendData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+                          <XAxis dataKey="month" tickLine={false} axisLine={false} />
+                          <YAxis tickLine={false} axisLine={false} width={36} />
+                          <Tooltip />
+                          <Line
+                            type="monotone"
+                            dataKey="kwh"
+                            stroke="var(--color-accent)"
+                            strokeWidth={3}
+                            dot={{ r: 4 }}
+                            activeDot={{ r: 6 }}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="score"
+                            stroke="var(--color-success)"
+                            strokeWidth={2}
+                            dot={{ r: 3 }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-white p-5 shadow-sm">
+                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-ink-3)]">Progress Tracking</p>
+                    <p className="mt-2 text-[var(--text-sm)] text-[var(--color-ink-2)]">
+                      Upload one more monthly bill to unlock a clearer savings trend and show whether your latest action is working.
                     </p>
                   </div>
-                </div>
-                <div className="mt-4 h-56">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={trendData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-                      <XAxis dataKey="month" tickLine={false} axisLine={false} />
-                      <YAxis tickLine={false} axisLine={false} width={36} />
-                      <Tooltip />
-                      <Line
-                        type="monotone"
-                        dataKey="kwh"
-                        stroke="var(--color-accent)"
-                        strokeWidth={3}
-                        dot={{ r: 4 }}
-                        activeDot={{ r: 6 }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="score"
-                        stroke="var(--color-success)"
-                        strokeWidth={2}
-                        dot={{ r: 3 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
+                )}
               </div>
 
               <div className="space-y-4">
@@ -523,51 +467,6 @@ export default function Home() {
                     This helps EnergiKita learn which advice actually turns into savings for you.
                   </p>
                 </div>
-
-                <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-white p-5 shadow-sm">
-                  <p className="text-[10px] uppercase tracking-wider text-[var(--color-ink-3)]">Why Your Score Changed</p>
-                  <p className="mt-2 text-[var(--text-sm)] text-[var(--color-ink-2)]">
-                    Your score blends bill intensity, tariff exposure, benchmark gap, and likely appliance pressure.
-                  </p>
-                  <div className="mt-4 space-y-3">
-                    <div className="rounded-[var(--radius-md)] bg-[var(--color-paper-2)] p-3">
-                      <div className="flex items-center justify-between text-[var(--text-sm)]">
-                        <span className="text-[var(--color-ink-2)]">Usage penalty</span>
-                        <span className="font-medium text-[var(--color-ink)]">-{latestRecord.scoreBreakdown.usagePenalty}</span>
-                      </div>
-                    </div>
-                    <div className="rounded-[var(--radius-md)] bg-[var(--color-paper-2)] p-3">
-                      <div className="flex items-center justify-between text-[var(--text-sm)]">
-                        <span className="text-[var(--color-ink-2)]">Tariff penalty</span>
-                        <span className="font-medium text-[var(--color-ink)]">-{latestRecord.scoreBreakdown.tariffPenalty}</span>
-                      </div>
-                    </div>
-                    <div className="rounded-[var(--radius-md)] bg-[var(--color-paper-2)] p-3">
-                      <div className="flex items-center justify-between text-[var(--text-sm)]">
-                        <span className="text-[var(--color-ink-2)]">Benchmark penalty</span>
-                        <span className="font-medium text-[var(--color-ink)]">-{latestRecord.scoreBreakdown.benchmarkPenalty}</span>
-                      </div>
-                    </div>
-                    <div className="rounded-[var(--radius-md)] bg-[var(--color-paper-2)] p-3">
-                      <div className="flex items-center justify-between text-[var(--text-sm)]">
-                        <span className="text-[var(--color-ink-2)]">Load-driver penalty</span>
-                        <span className="font-medium text-[var(--color-ink)]">-{latestRecord.scoreBreakdown.driverPenalty}</span>
-                      </div>
-                    </div>
-                    <div className="rounded-[var(--radius-md)] border border-[var(--color-success)] bg-[#ecfdf5] p-3">
-                      <div className="flex items-center justify-between text-[var(--text-sm)]">
-                        <span className="text-[#065f46]">Action follow-through</span>
-                        <span className="font-medium text-[#065f46]">
-                          {latestRecord.actionStatus === "followed"
-                            ? "+5"
-                            : latestRecord.actionStatus === "not_followed"
-                              ? "-3"
-                              : "0"}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -598,7 +497,7 @@ export default function Home() {
                   Choose a bill file
                 </button>
                 <button onClick={loadSampleFixture} className="text-[var(--text-xs)] text-[var(--color-accent)] hover:text-[var(--color-ink)] underline transition-colors">
-                  Try sample fixture
+                  Try sample bill
                 </button>
                 <a href="/sample-bills/tnb-household-sample.pdf" target="_blank" rel="noreferrer" className="text-[var(--text-xs)] text-[var(--color-ink-3)] hover:text-[var(--color-ink)] underline transition-colors">
                   View sample PDF
@@ -905,7 +804,6 @@ export default function Home() {
                     });
                     saveBillSnapshot(extractedData);
                     buildReliabilityMessage(extractedData?.source ?? "unknown");
-                    setTelemetrySummaries(getAllSourceReliabilitySummaries());
                     router.push("/onboard");
                   }}
                   disabled={missingFields.length > 0 || blockedByReliability}

@@ -11,6 +11,9 @@ export type HouseholdProfile = {
   heaterHours: number;
   lightingType: string;
   cookingType: string;
+  previousBillKwh?: number;
+  recentAverageKwh?: number;
+  lastActionStatus?: "followed" | "not_followed" | "pending" | "none";
 };
 
 type TariffBlock = {
@@ -26,11 +29,20 @@ const TNB_DOMESTIC_BLOCKS: TariffBlock[] = [
   { upto: Number.POSITIVE_INFINITY, rate: 0.571 },
 ];
 
-const BENCHMARKS: Record<string, number> = {
-  condo: 380,
-  terrace: 520,
-  "semi-d": 650,
-  bungalow: 780,
+const BASE_PROPERTY_BENCHMARKS: Record<string, number> = {
+  condo: 330,
+  terrace: 430,
+  "semi-d": 530,
+  bungalow: 620,
+};
+
+const OCCUPANT_BASELINE = 3;
+
+const PROPERTY_DAILY_BUFFER: Record<string, number> = {
+  condo: 0.8,
+  terrace: 1.2,
+  "semi-d": 1.6,
+  bungalow: 2.1,
 };
 
 function round(value: number, digits = 1) {
@@ -60,16 +72,43 @@ function classifyUsage(kwh: number) {
   return "heavy";
 }
 
+function calculateBenchmarkKwh(profile: HouseholdProfile) {
+  const base = BASE_PROPERTY_BENCHMARKS[profile.propertyType] ?? 390;
+  const occupantAdjustment = Math.max(profile.occupantCount - OCCUPANT_BASELINE, 0) * 42;
+  const acAdjustment = profile.acCount * 24;
+  const heaterAdjustment = profile.heaterHours * 18;
+  const cookingAdjustment =
+    profile.cookingType === "induction" ? 24 : profile.cookingType === "mixed" ? 12 : 0;
+  const lightingAdjustment =
+    profile.lightingType === "non-led" ? 18 : profile.lightingType === "mixed" ? 8 : 0;
+  const fridgeAdjustment =
+    profile.fridgeCount * 10 +
+    (profile.fridgeAge === "old" ? 18 : profile.fridgeAge === "mid" ? 8 : 0);
+  const propertyDailyBuffer =
+    (PROPERTY_DAILY_BUFFER[profile.propertyType] ?? 1) * Math.max(profile.billingDays - 30, 0);
+
+  return base
+    + occupantAdjustment
+    + acAdjustment
+    + heaterAdjustment
+    + cookingAdjustment
+    + lightingAdjustment
+    + fridgeAdjustment
+    + propertyDailyBuffer;
+}
+
 export function buildEnergyDiagnosis(profile: HouseholdProfile) {
   const averageDailyKwh = profile.billKwh / Math.max(profile.billingDays, 1);
-  const benchmark = BENCHMARKS[profile.propertyType] ?? 450;
-  const adjustedBenchmark = benchmark + Math.max(profile.occupantCount - 3, 0) * 35;
+  const adjustedBenchmark = calculateBenchmarkKwh(profile);
   const benchmarkDeltaPercent = ((profile.billKwh - adjustedBenchmark) / adjustedBenchmark) * 100;
   const currentCost = calculateTariffCost(profile.billKwh);
   const costAt300 = calculateTariffCost(Math.min(profile.billKwh, 300));
   const expensiveTierUsage = Math.max(profile.billKwh - 300, 0);
   const kwhToNextCheaperTier = expensiveTierUsage;
   const potentialSavingsTo300 = currentCost - costAt300;
+  const previousBillKwh = profile.previousBillKwh ?? profile.recentAverageKwh ?? profile.billKwh;
+  const trendDeltaPercent =
+    previousBillKwh > 0 ? ((profile.billKwh - previousBillKwh) / previousBillKwh) * 100 : 0;
 
   let score = 0;
   score += profile.acCount * 18;
@@ -100,9 +139,10 @@ export function buildEnergyDiagnosis(profile: HouseholdProfile) {
   const tariffPenalty = Math.min(expensiveTierUsage / 8, 20);
   const benchmarkPenalty = Math.max(benchmarkDeltaPercent, 0) * 0.25;
   const driverPenalty = Math.min(score * 0.18, 18);
+  const trendPenalty = Math.max(trendDeltaPercent, 0) * 0.08;
   const energyScore = Math.max(
     20,
-    Math.min(95, round(100 - usagePenalty - tariffPenalty - benchmarkPenalty - driverPenalty, 0))
+    Math.min(95, round(100 - usagePenalty - tariffPenalty - benchmarkPenalty - driverPenalty - trendPenalty, 0))
   );
 
   return {
@@ -114,6 +154,7 @@ export function buildEnergyDiagnosis(profile: HouseholdProfile) {
     potentialSavingsTo300: round(Math.max(potentialSavingsTo300, 0), 2),
     benchmarkKwh: round(adjustedBenchmark),
     benchmarkDeltaPercent: round(benchmarkDeltaPercent),
+    trendDeltaPercent: round(trendDeltaPercent),
     dominantDriver,
     driverScore: round(score, 0),
     energyScore,

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Cpu, CheckCircle2 } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
-import { loadLatestBill, saveMonthlyInsight } from "@/lib/energy-memory";
+import { loadLatestBill, loadMonthlyHistory, saveMonthlyInsight } from "@/lib/energy-memory";
 
 type AnalysisResult = {
   summary: string;
@@ -16,16 +16,18 @@ type AnalysisResult = {
   financialDiagnosis: string;
   benchmarkInsight: string;
   rootCause: string;
-  tariffInsight: string;
-  diagnosis: {
-    averageDailyKwh: number;
-    estimatedBillRm: number;
-    expensiveTierUsage: number;
-    kwhToNextCheaperTier: number;
-    potentialSavingsTo300: number;
-    benchmarkDeltaPercent: number;
-    dominantDriver: string;
-    energyScore: number;
+    tariffInsight: string;
+    diagnosis: {
+      averageDailyKwh: number;
+      estimatedBillRm: number;
+      expensiveTierUsage: number;
+      kwhToNextCheaperTier: number;
+      potentialSavingsTo300: number;
+      benchmarkKwh: number;
+      benchmarkDeltaPercent: number;
+      trendDeltaPercent: number;
+      dominantDriver: string;
+      energyScore: number;
     scoreBreakdown: {
       usagePenalty: number;
       tariffPenalty: number;
@@ -104,6 +106,9 @@ export default function OnboardPage() {
       return;
     }
 
+    const monthlyHistory = loadMonthlyHistory();
+    const previousInsight = monthlyHistory[0];
+
     void fetch("/api/grafilab", {
       method: "POST",
       headers: {
@@ -122,6 +127,14 @@ export default function OnboardPage() {
         heaterHours,
         lightingType,
         cookingType,
+        previousBillKwh: previousInsight?.billKwh,
+        recentAverageKwh:
+          monthlyHistory.length > 0
+            ? Math.round(
+                (monthlyHistory.reduce((sum, item) => sum + item.billKwh, 0) / monthlyHistory.length) * 10
+              ) / 10
+            : undefined,
+        lastActionStatus: previousInsight?.actionStatus ?? "none",
       }),
     })
       .then(async (response) => {
