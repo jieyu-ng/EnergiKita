@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { Sun, ArrowRight, Zap, Target, Box, RefreshCw } from "lucide-react";
+import { useUser } from "@/contexts/UserContext";
 
 export default function PassportPage() {
+  const { accountType } = useUser();
   return (
     <div className="max-w-[var(--page-width)] mx-auto px-6 pt-12 pb-24">
       <div className="flex flex-col md:flex-row gap-8">
@@ -57,28 +59,13 @@ export default function PassportPage() {
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="border border-[var(--color-border)] rounded-[var(--radius-md)] p-5 bg-white shadow-sm flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center mb-2">
-                      <Sun className="w-5 h-5 text-[var(--color-ink-3)] mr-2" />
-                      <h3 className="font-bold text-[var(--text-sm)] text-[var(--color-ink)]">1. Use Directly</h3>
-                    </div>
-                    <p className="text-[var(--text-sm)] text-[var(--color-ink-2)]">
-                      Consume generated solar energy instantly during operating hours.
-                    </p>
-                  </div>
-                  <div className="mt-4 pt-3 border-t border-[var(--color-border)]">
-                    <span className="text-[var(--text-xs)] font-medium text-[var(--color-ink-3)] uppercase tracking-wider">Result:</span>
-                    <p className="text-[var(--text-sm)] font-medium text-[var(--color-ink)] mt-1">Saves RM 0.50/kWh (Avoided Import)</p>
-                  </div>
-                </div>
 
                 <div className="border border-[var(--color-accent)] rounded-[var(--radius-md)] p-5 bg-white shadow-sm flex flex-col justify-between relative overflow-hidden">
                   <div className="absolute top-0 right-0 bg-[var(--color-accent)] text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider rounded-bl-md">Optimal</div>
                   <div>
                     <div className="flex items-center mb-2">
                       <RefreshCw className="w-5 h-5 text-[var(--color-accent)] mr-2" />
-                      <h3 className="font-bold text-[var(--text-sm)] text-[var(--color-ink)]">2. Shift Equipment</h3>
+                      <h3 className="font-bold text-[var(--text-sm)] text-[var(--color-ink)]">1. Shift Equipment</h3>
                     </div>
                     <p className="text-[var(--text-sm)] text-[var(--color-ink-2)]">
                       Move flexible washing cycles into peak solar hours (11am - 2pm).
@@ -94,7 +81,7 @@ export default function PassportPage() {
                   <div>
                     <div className="flex items-center mb-2">
                       <Zap className="w-5 h-5 text-[var(--color-success)] mr-2" />
-                      <h3 className="font-bold text-[var(--text-sm)] text-[var(--color-ink)]">3. Export Surplus</h3>
+                      <h3 className="font-bold text-[var(--text-sm)] text-[var(--color-ink)]">2. Export Surplus</h3>
                     </div>
                     <p className="text-[var(--text-sm)] text-[var(--color-ink-2)]">
                       Export the remaining inflexible surplus back to the TNB grid.
@@ -106,21 +93,23 @@ export default function PassportPage() {
                   </div>
                 </div>
 
-                <div className="border border-[var(--color-border)] rounded-[var(--radius-md)] p-5 bg-[var(--color-paper-2)] shadow-sm flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center mb-2">
-                      <Box className="w-5 h-5 text-[var(--color-ink-2)] mr-2" />
-                      <h3 className="font-bold text-[var(--text-sm)] text-[var(--color-ink)]">4. Virtual Allocation (NOVA)</h3>
+                {accountType === "business" && (
+                  <div className="border border-[var(--color-border)] rounded-[var(--radius-md)] p-5 bg-[var(--color-paper-2)] shadow-sm flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center mb-2">
+                        <Box className="w-5 h-5 text-[var(--color-ink-2)] mr-2" />
+                        <h3 className="font-bold text-[var(--text-sm)] text-[var(--color-ink)]">3. Virtual Allocation (NOVA)</h3>
+                      </div>
+                      <p className="text-[var(--text-sm)] text-[var(--color-ink-2)]">
+                        Pass export credits to designated business branches via grid offset.
+                      </p>
                     </div>
-                    <p className="text-[var(--text-sm)] text-[var(--color-ink-2)]">
-                      Pass export credits to designated business branches via grid offset.
-                    </p>
+                    <div className="mt-4 pt-3 border-t border-[var(--color-border)]">
+                      <span className="text-[var(--text-xs)] font-medium text-[var(--color-ink-3)] uppercase tracking-wider">Result:</span>
+                      <p className="text-[var(--text-sm)] font-medium text-[var(--color-ink)] mt-1">Offsets high-bill branches</p>
+                    </div>
                   </div>
-                  <div className="mt-4 pt-3 border-t border-[var(--color-border)]">
-                    <span className="text-[var(--text-xs)] font-medium text-[var(--color-ink-3)] uppercase tracking-wider">Result:</span>
-                    <p className="text-[var(--text-sm)] font-medium text-[var(--color-ink)] mt-1">Offsets high-bill branches</p>
-                  </div>
-                </div>
+                )}
               </div>
             </section>
             

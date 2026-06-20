@@ -39,6 +39,7 @@ export default function Home() {
   };
 
   const runMockExtraction = () => {
+    setStep(2);
     setTimeout(() => {
       if (accountType === "business") {
         setExtractedData({
@@ -77,23 +78,30 @@ export default function Home() {
 
         <div className="pt-16 max-w-2xl mx-auto text-left">
           {step === 1 && (
-            <div 
-              onClick={() => fileInputRef.current?.click()}
-              className="border border-[var(--color-border)] rounded-[var(--radius-lg)] p-12 bg-white flex flex-col items-center justify-center cursor-pointer hover:border-[var(--color-accent)] transition-colors shadow-sm"
-            >
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleFileSelect} 
-                className="hidden" 
-                accept=".json,.pdf,.png,.jpg"
-              />
-              <div className="w-12 h-12 rounded-full bg-[var(--color-paper-3)] flex items-center justify-center mb-4">
-                <UploadCloud className="w-6 h-6 text-[var(--color-ink-2)]" />
+            <>
+              <div 
+                onClick={runMockExtraction}
+                className="border border-[var(--color-border)] rounded-[var(--radius-lg)] p-12 bg-white flex flex-col items-center justify-center cursor-pointer hover:border-[var(--color-accent)] transition-colors shadow-sm"
+              >
+                <input 
+                  type="file" 
+                  ref={fileInputRef} 
+                  onChange={handleFileSelect} 
+                  className="hidden" 
+                  accept=".json,.pdf,.png,.jpg"
+                />
+                <div className="w-12 h-12 rounded-full bg-[var(--color-paper-3)] flex items-center justify-center mb-4">
+                  <UploadCloud className="w-6 h-6 text-[var(--color-ink-2)]" />
+                </div>
+                <p className="text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Click to simulate electricity bill upload</p>
+                <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] mt-1">Runs deterministic extraction pipeline</p>
               </div>
-              <p className="text-[var(--text-sm)] font-medium text-[var(--color-ink)]">Click to upload electricity bill or drag and drop</p>
-              <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] mt-1">PDF, PNG, JPG up to 10MB</p>
-            </div>
+              <div className="mt-4 text-center">
+                <button onClick={() => fileInputRef.current?.click()} className="text-[var(--text-xs)] text-[var(--color-ink-3)] hover:text-[var(--color-ink)] underline transition-colors">
+                  Or upload a real .json file
+                </button>
+              </div>
+            </>
           )}
 
           {step === 2 && (
@@ -127,37 +135,38 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Anomaly Detection Card */}
-              <div className="bg-white rounded-[var(--radius-lg)] border border-[#fca5a5] shadow-sm overflow-hidden relative">
-                <div className="absolute top-0 left-0 w-1 h-full bg-[#ef4444]"></div>
-                <div className="p-6 pl-8">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-bold text-[var(--text-base)] text-[var(--color-ink)] flex items-center">
-                        <TrendingUp className="w-5 h-5 mr-2 text-[#ef4444]" />
-                        Usage Anomaly Detected
-                      </h3>
-                      <p className="text-[var(--text-sm)] text-[var(--color-ink-2)] mt-1">
-                        Current usage is significantly above recent monthly baseline.
-                      </p>
+              {accountType === "business" && (
+                <div className="bg-white rounded-[var(--radius-lg)] border border-[#fca5a5] shadow-sm overflow-hidden relative mt-6">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-[#ef4444]"></div>
+                  <div className="p-6 pl-8">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-bold text-[var(--text-base)] text-[var(--color-ink)] flex items-center">
+                          <TrendingUp className="w-5 h-5 mr-2 text-[#ef4444]" />
+                          Unusual Usage Spiked Detected
+                        </h3>
+                        <p className="text-[var(--text-sm)] text-[var(--color-ink-2)] mt-1">
+                          Your electricity usage has spiked recently compared to your normal habits.
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center text-[var(--text-xs)] font-bold text-[#b91c1c] bg-[#fee2e2] px-2.5 py-1 rounded-md uppercase tracking-wider">
+                        Requires Attention
+                      </span>
                     </div>
-                    <span className="inline-flex items-center text-[var(--text-xs)] font-bold text-[#b91c1c] bg-[#fee2e2] px-2.5 py-1 rounded-md uppercase tracking-wider">
-                      Medium Severity
-                    </span>
-                  </div>
-                  
-                  <div className="mt-4 grid grid-cols-2 gap-4">
-                    <div className="bg-[var(--color-paper-2)] p-3 rounded-[var(--radius-md)] border border-[var(--color-border)]">
-                      <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider">Deviation</p>
-                      <p className="text-[var(--text-lg)] font-bold text-[var(--color-ink)]">{accountType === "business" ? "+18.6%" : "+21.4%"}</p>
-                    </div>
-                    <div className="bg-[var(--color-paper-2)] p-3 rounded-[var(--radius-md)] border border-[var(--color-border)]">
-                      <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider">Baseline (3-mo avg)</p>
-                      <p className="text-[var(--text-lg)] font-bold text-[var(--color-ink)]">{accountType === "business" ? "1197 kWh" : "480 kWh"}</p>
+                    
+                    <div className="mt-4 grid grid-cols-2 gap-4">
+                      <div className="bg-[var(--color-paper-2)] p-3 rounded-[var(--radius-md)] border border-[var(--color-border)]">
+                        <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider">Usage Increase</p>
+                        <p className="text-[var(--text-lg)] font-bold text-[var(--color-ink)]">{accountType === "business" ? "+18.6%" : "+21.4%"}</p>
+                      </div>
+                      <div className="bg-[var(--color-paper-2)] p-3 rounded-[var(--radius-md)] border border-[var(--color-border)]">
+                        <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider">Your Normal Usage</p>
+                        <p className="text-[var(--text-lg)] font-bold text-[var(--color-ink)]">{accountType === "business" ? "1197 kWh" : "480 kWh"}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               <div className="flex justify-end pt-2">
                 <button 
