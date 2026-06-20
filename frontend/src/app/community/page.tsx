@@ -103,7 +103,7 @@ export default function CommunityPage() {
                           <h3 className="text-[var(--text-xl)] font-display text-[var(--color-ink)]">Run Optimisation</h3>
                           <p className="text-[var(--text-sm)] text-[var(--color-ink-2)] mt-2 max-w-sm mx-auto">Target: Maximum Local Solar, Balanced Plan</p>
                         </div>
-                        <button onClick={runOptimisation} className="inline-flex items-center justify-center bg-[var(--color-ink)] text-[var(--color-paper)] rounded-full px-8 py-4 font-medium hover:bg-[var(--color-accent)] transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
+                        <button onClick={runOptimisation} className="inline-flex items-center justify-center bg-[var(--color-ink)] text-white rounded-full px-8 py-4 font-medium hover:bg-[var(--color-accent)] transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
                           <PlayCircle className="w-5 h-5 mr-3" /> Start Engine
                         </button>
                       </div>
@@ -211,7 +211,7 @@ export default function CommunityPage() {
                     </div>
 
                     <div className="pt-8">
-                      <button onClick={() => window.print()} className="flex items-center justify-center w-full bg-[var(--color-ink)] text-[var(--color-paper)] rounded-full py-4 text-[var(--text-sm)] font-medium hover:bg-[var(--color-accent)] transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
+                      <button onClick={() => window.print()} className="flex items-center justify-center w-full bg-[var(--color-ink)] text-white rounded-full py-4 text-[var(--text-sm)] font-medium hover:bg-[var(--color-accent)] transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
                         <Download className="w-5 h-5 mr-2" /> Export Final PDF Report
                       </button>
                     </div>

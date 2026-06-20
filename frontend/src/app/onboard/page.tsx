@@ -122,7 +122,7 @@ export default function OnboardPage() {
             <button 
               type="submit" 
               disabled={isSubmitting}
-              className="flex items-center bg-[var(--color-ink)] text-[var(--color-paper)] px-8 py-4 rounded-full font-medium shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:bg-[var(--color-accent)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-[var(--dur-base)]"
+              className="flex items-center bg-[var(--color-ink)] text-white px-8 py-4 rounded-full font-medium shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:bg-[var(--color-accent)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-[var(--dur-base)]"
             >
               Generate Passport <ArrowRight className="w-5 h-5 ml-2" />
             </button>

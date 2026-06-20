@@ -109,7 +109,7 @@ export default function UploadPage() {
             <div className="flex justify-end pt-4">
               <button 
                 onClick={() => router.push("/onboard")}
-                className="bg-[var(--color-ink)] text-[var(--color-paper)] px-8 py-4 rounded-full font-medium shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:bg-[var(--color-accent)] transition-all duration-[var(--dur-base)]"
+                className="bg-[var(--color-ink)] text-white px-8 py-4 rounded-full font-medium shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:bg-[var(--color-accent)] transition-all duration-[var(--dur-base)]"
               >
                 Confirm & Continue
               </button>
