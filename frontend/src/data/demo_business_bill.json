@@ -1,0 +1,12 @@
+{
+  "billing_month": "May 2026",
+  "account_type": "commercial",
+  "premise": "Aisyah Laundromat HQ",
+  "consumption_kwh": 1420,
+  "total_amount_rm": 980.00,
+  "peak_usage_kwh": 650,
+  "off_peak_usage_kwh": 770,
+  "inferred_equipment": ["Commercial Washers", "HVAC", "Dryers"],
+  "confidence": 0.94,
+  "source": "pdf_extracted"
+}

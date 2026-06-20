@@ -1,0 +1,12 @@
+{
+  "billing_month": "May 2026",
+  "account_type": "residential",
+  "premise": "Terrace House Lot 14",
+  "consumption_kwh": 620,
+  "total_amount_rm": 320.00,
+  "peak_usage_kwh": 410,
+  "off_peak_usage_kwh": 210,
+  "inferred_equipment": ["Air Conditioning", "EV Charger"],
+  "confidence": 0.96,
+  "source": "pdf_extracted"
+}

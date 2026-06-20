@@ -4,6 +4,8 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { UploadCloud, Check, AlertTriangle, FileJson, TrendingUp } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
+import demoBusinessBill from "@/data/demo_business_bill.json";
+import demoIndividualBill from "@/data/demo_individual_bill.json";
 
 export default function Home() {
   const router = useRouter();
@@ -42,21 +44,9 @@ export default function Home() {
     setStep(2);
     setTimeout(() => {
       if (accountType === "business") {
-        setExtractedData({
-          billing_month: "May 2026",
-          consumption_kwh: 1420,
-          total_amount_rm: 980.00,
-          confidence: 0.94,
-          source: "pdf_extracted"
-        });
+        setExtractedData(demoBusinessBill);
       } else {
-        setExtractedData({
-          billing_month: "May 2026",
-          consumption_kwh: 620,
-          total_amount_rm: 320.00,
-          confidence: 0.96,
-          source: "pdf_extracted"
-        });
+        setExtractedData(demoIndividualBill);
       }
       setStep(3);
     }, 1500);
@@ -121,17 +111,59 @@ export default function Home() {
                 <div className="px-6 py-4 border-b border-[var(--color-border)] bg-[var(--color-paper-2)] flex items-center justify-between">
                   <h3 className="font-semibold text-[var(--text-sm)] text-[var(--color-ink)] flex items-center">
                     <FileJson className="w-4 h-4 mr-2 text-[var(--color-ink-3)]" />
-                    Structured Bill Output
+                    Bill Intelligence Output
                   </h3>
                   <div className="flex items-center text-[var(--text-xs)] font-medium text-[var(--color-success)] px-2 py-1 bg-[var(--color-success-bg)] rounded-md">
-                    <Check className="w-3 h-3 mr-1" /> Confidence High
+                    <Check className="w-3 h-3 mr-1" /> Verified Data
                   </div>
                 </div>
                 
-                <div className="p-6 bg-[var(--color-paper-3)] text-[var(--color-ink)] font-mono text-[var(--text-sm)] overflow-x-auto border-t border-[var(--color-border)]">
-                  <pre>
-{JSON.stringify(extractedData, null, 2)}
-                  </pre>
+                <div className="p-6 grid grid-cols-2 md:grid-cols-4 gap-6 bg-white border-t border-[var(--color-border)]">
+                  <div>
+                    <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider mb-1">Billing Month</p>
+                    <p className="text-[var(--text-base)] font-bold text-[var(--color-ink)]">{extractedData.billing_month}</p>
+                  </div>
+                  <div>
+                    <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider mb-1">Total Amount</p>
+                    <p className="text-[var(--text-base)] font-bold text-[var(--color-accent)]">RM {extractedData.total_amount_rm.toFixed(2)}</p>
+                  </div>
+                  <div>
+                    <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider mb-1">Consumption</p>
+                    <p className="text-[var(--text-base)] font-bold text-[var(--color-ink)]">{extractedData.consumption_kwh} kWh</p>
+                  </div>
+                  <div>
+                    <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider mb-1">Confidence</p>
+                    <p className="text-[var(--text-base)] font-bold text-[var(--color-success)]">{(extractedData.confidence * 100).toFixed(0)}%</p>
+                  </div>
+                  
+                  {extractedData.peak_usage_kwh && (
+                    <>
+                      <div className="col-span-2 md:col-span-2 pt-4 border-t border-[var(--color-border)]">
+                        <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider mb-2">Usage Breakdown</p>
+                        <div className="flex items-center gap-4 text-[var(--text-sm)]">
+                          <div className="bg-[var(--color-paper-2)] px-3 py-1.5 rounded-md border border-[var(--color-border)]">
+                            <span className="text-[var(--color-ink-2)] mr-2">Peak:</span>
+                            <span className="font-bold text-[var(--color-ink)]">{extractedData.peak_usage_kwh} kWh</span>
+                          </div>
+                          <div className="bg-[var(--color-paper-2)] px-3 py-1.5 rounded-md border border-[var(--color-border)]">
+                            <span className="text-[var(--color-ink-2)] mr-2">Off-Peak:</span>
+                            <span className="font-bold text-[var(--color-ink)]">{extractedData.off_peak_usage_kwh} kWh</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="col-span-2 md:col-span-2 pt-4 border-t border-[var(--color-border)]">
+                        <p className="text-[var(--text-xs)] text-[var(--color-ink-3)] font-medium uppercase tracking-wider mb-2">Inferred Equipment Load</p>
+                        <div className="flex flex-wrap gap-2">
+                          {extractedData.inferred_equipment?.map((eq: string, i: number) => (
+                            <span key={i} className="inline-flex items-center px-2.5 py-1 rounded-md text-[var(--text-xs)] font-medium bg-[var(--color-accent)]/10 text-[var(--color-accent)] border border-[var(--color-accent)]/20">
+                              {eq}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 

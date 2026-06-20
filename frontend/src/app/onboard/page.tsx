@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Cpu, CheckCircle2 } from "lucide-react";
 import { useUser } from "@/contexts/UserContext";
+import demoAiAdvice from "@/data/demo_ai_advice.json";
 
 export default function OnboardPage() {
   const router = useRouter();
@@ -222,7 +223,14 @@ export default function OnboardPage() {
 
                     <div className="space-y-3">
                       <label className="block text-[var(--text-sm)] font-medium text-[var(--color-ink)]">How many refrigerators?</label>
-                      <input type="number" min="0" value={fridgeCount} onChange={(e) => setFridgeCount(Number(e.target.value))} className="w-24 bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] focus:outline-none focus:border-[var(--color-success)] focus:ring-1 focus:ring-[var(--color-success)] transition-all" />
+                      <div className="flex gap-4">
+                        <input type="number" min="0" value={fridgeCount} onChange={(e) => setFridgeCount(Number(e.target.value))} className="w-24 bg-white border border-[var(--color-border)] rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] focus:outline-none focus:border-[var(--color-success)] focus:ring-1 focus:ring-[var(--color-success)] transition-all" />
+                        <div className="flex-1 flex items-center gap-2 text-[var(--text-xs)] text-[var(--color-ink-2)]">
+                          <input type="file" id="fridge-upload" className="hidden" accept="image/*" />
+                          <button type="button" onClick={() => document.getElementById('fridge-upload')?.click()} className="px-3 py-1.5 border border-[var(--color-border)] rounded hover:bg-[var(--color-paper-2)] transition-colors text-[var(--color-ink)]">Upload Fridge Label</button>
+                          <span>(Optional: Let AI read energy rating)</span>
+                        </div>
+                      </div>
                     </div>
 
                     <div className="space-y-3">
@@ -264,11 +272,11 @@ export default function OnboardPage() {
                     <div>
                       <h3 className="font-bold text-[var(--text-base)] text-[var(--color-ink)]">Analysis Complete</h3>
                       <p className="text-[var(--text-sm)] text-[var(--color-ink-2)] mt-2 leading-relaxed">
-                        Your {acCount} AC units are consuming approximately <strong>45% of your RM 320 bill</strong>. Since you use <strong>{cookingType} cooking</strong> and {heaterHours} hours of water heating daily, your peak loads hit during the evening.
+                        Your {acCount} AC units are consuming approximately <strong>{demoAiAdvice.ac_consumption_percentage}% of your RM {demoAiAdvice.base_bill_rm} bill</strong>. Since you use <strong>{cookingType} cooking</strong> and {heaterHours} hours of water heating daily, your peak loads hit during the {demoAiAdvice.peak_load_time}.
                       </p>
                       <div className="mt-4 p-4 bg-[#ecfdf5] border border-[#a7f3d0] rounded-[var(--radius-md)]">
                         <p className="text-[var(--text-sm)] font-medium text-[#065f46]">
-                          💡 Advice: Shift your {heaterHours}h water heating to off-peak daylight hours (10am-2pm). If you adopt a 6kWp solar system, this simple shift will offset an additional RM 60/month.
+                          💡 Advice: {demoAiAdvice.advice}
                         </p>
                       </div>
                     </div>
